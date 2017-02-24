@@ -3,9 +3,9 @@
   
     
     <entry>
-      <title><![CDATA[Hello World]]></title>
-      <url>%2F2017%2F02%2F19%2Fhello-world%2F</url>
-      <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment]]></content>
+      <title><![CDATA[Solr学习:Solr5.5.0搭建]]></title>
+      <url>%2F2017%2F02%2F24%2FSolr%E5%AD%A6%E4%B9%A0-Solr5-5-0%E6%90%AD%E5%BB%BA%2F</url>
+      <content type="text"><![CDATA[前言 最近在工作上，由于DB使用了Cobar进行分库，所以表关联无法得以实现，需要在Solr上来进行一些复杂的查询。而且即便不进行分库，DB操作也不建议大数据量的多表进行关联查询，尤其是那种4、5张大表进行join的操作。然后顺带学习和了解一下Solr。 需要注意的是Solr6以上版本需要JDK8，Solr5以上版本需要JDK7。 Solr搭建 下载Solr 5.5.0，并解压到当前目录下。 下载Tomcat，此处我用的是Tomcat8.5.11。 将solr-5.5.0/server/solr-webapp下的webapp文件夹拷贝到Tomcat/webapps下，并将拷贝过来的webapp重命名成solr。（此处建议先把Tomcat/webapps下内容全部清空） 把solr-5.5.0/server/lib/ext中的jar包复制到Tomcat/webapps/solr/WEB-INF/lib目录中。 在任意位置新建solr_home文件夹，我建立在/Users/fuukangun路径下。把solr-5.5.0/server下的solr文件夹，拷贝到刚刚创建的solr_home文件夹下。solr_home就是之后创建索引实例Core的需要的目录 把solr-5.5.0/server/resources下的log4j.properties文件拷贝到Tomcat/webapps/solr/WEB-INF/classes目录下（classes不存在需要手动创建） 打开Tomcat/webapps/solr/WEB-INF下的web.xml文件。找到下面的配置内容，配置solr_home，一开始应该是被注释掉了。 12345&lt;env-entry&gt; &lt;env-entry-name&gt;solr/home&lt;/env-entry-name&gt; &lt;env-entry-value&gt;/put/your/solr/home/here&lt;/env-entry-value&gt; &lt;env-entry-type&gt;java.lang.String&lt;/env-entry-type&gt; &lt;/env-entry&gt; 将env-entry-value值替换为/Users/fuukangun/solr_home/solr，保存。 启动Tomcat，在浏览器输入http://localhost:8080/solr/index.html#/ 就能出现Solr控制台了。]]></content>
     </entry>
 
     

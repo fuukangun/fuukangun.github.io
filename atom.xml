@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-02-23T15:54:06.000Z</updated>
+  <updated>2017-02-24T16:23:27.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,34 +16,43 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hello World</title>
-    <link href="http://yoursite.com/2017/02/19/hello-world/"/>
-    <id>http://yoursite.com/2017/02/19/hello-world/</id>
-    <published>2017-02-19T07:17:17.000Z</published>
-    <updated>2017-02-23T15:54:06.000Z</updated>
+    <title>Solr学习:Solr5.5.0搭建</title>
+    <link href="http://yoursite.com/2017/02/24/Solr%E5%AD%A6%E4%B9%A0-Solr5-5-0%E6%90%AD%E5%BB%BA/"/>
+    <id>http://yoursite.com/2017/02/24/Solr学习-Solr5-5-0搭建/</id>
+    <published>2017-02-24T14:58:37.000Z</published>
+    <updated>2017-02-24T16:23:27.000Z</updated>
     
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<a id="more"></a>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+    <content type="html"><![CDATA[<blockquote>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1></blockquote>
+<p>最近在工作上，由于DB使用了Cobar进行分库，所以表关联无法得以实现，需要在Solr上来进行一些复杂的查询。而且即便不进行分库，DB操作也不建议大数据量的多表进行关联查询，尤其是那种4、5张大表进行join的操作。然后顺带学习和了解一下Solr。</p>
+<p><font color="#DC143C">需要注意的是Solr6以上版本需要JDK8，Solr5以上版本需要JDK7。</font></p>
+<blockquote>
+<h1 id="Solr搭建"><a href="#Solr搭建" class="headerlink" title="Solr搭建"></a>Solr搭建</h1></blockquote>
+<ol>
+<li><a href="http://lucene.apache.org/solr/" target="_blank" rel="external">下载Solr 5.5.0</a>，并解压到当前目录下。</li>
+<li><a href="http://tomcat.apache.org/" target="_blank" rel="external">下载Tomcat</a>，此处我用的是Tomcat8.5.11。</li>
+<li>将solr-5.5.0/server/solr-webapp下的webapp文件夹拷贝到Tomcat/webapps下，<font color="#DC143C">并将拷贝过来的webapp重命名成solr。</font>（此处建议先把Tomcat/webapps下内容全部清空）</li>
+<li>把solr-5.5.0/server/lib/ext中的jar包复制到Tomcat/webapps/solr/WEB-INF/lib目录中。</li>
+<li>在任意位置新建solr_home文件夹，我建立在/Users/fuukangun路径下。把solr-5.5.0/server下的solr文件夹，拷贝到刚刚创建的solr_home文件夹下。<font color="#DC143C">solr_home就是之后创建索引实例Core的需要的目录</font></li>
+<li>把solr-5.5.0/server/resources下的log4j.properties文件拷贝到Tomcat/webapps/solr/WEB-INF/classes目录下（classes不存在需要手动创建）</li>
+<li><p>打开Tomcat/webapps/solr/WEB-INF下的web.xml文件。找到下面的配置内容，配置solr_home，一开始应该是被注释掉了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;env-entry&gt;</div><div class="line">       &lt;env-entry-name&gt;solr/home&lt;/env-entry-name&gt;</div><div class="line">       &lt;env-entry-value&gt;/put/your/solr/home/here&lt;/env-entry-value&gt;</div><div class="line">       &lt;env-entry-type&gt;java.lang.String&lt;/env-entry-type&gt;</div><div class="line"> &lt;/env-entry&gt;</div></pre></td></tr></table></figure>
+<p>将env-entry-value值替换为/Users/fuukangun/solr_home/solr，保存。</p>
+</li>
+</ol>
+<p>启动Tomcat，在浏览器输入<a href="http://localhost:8080/solr/index.html#/" target="_blank" rel="external">http://localhost:8080/solr/index.html#/</a> 就能出现Solr控制台了。</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for more info. If you get any problems when using Hexo, you can find the answer in &lt;a href=&quot;https://hexo.io/docs/troubleshooting.html&quot;&gt;troubleshooting&lt;/a&gt; or you can ask me on &lt;a href=&quot;https://github.com/hexojs/hexo/issues&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+      本文讲述如何在macOS上搭建Solr5.5.0，至于为什么不用最新的Solr6，那是因为工作中用的是Solr5的版本。
     
     </summary>
     
-      <category term="testCategories" scheme="http://yoursite.com/categories/testCategories/"/>
+      <category term="学习" scheme="http://yoursite.com/categories/%E5%AD%A6%E4%B9%A0/"/>
     
     
-      <category term="testTags" scheme="http://yoursite.com/tags/testTags/"/>
+      <category term="Solr" scheme="http://yoursite.com/tags/Solr/"/>
     
   </entry>
   
