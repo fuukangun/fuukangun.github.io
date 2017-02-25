@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-02-25T13:15:32.000Z</updated>
+  <updated>2017-02-25T16:17:42.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,40 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Solr学习:Core配置</title>
+    <link href="http://yoursite.com/2017/02/25/Solr%E5%AD%A6%E4%B9%A0-Core%E9%85%8D%E7%BD%AE/"/>
+    <id>http://yoursite.com/2017/02/25/Solr学习-Core配置/</id>
+    <published>2017-02-25T13:58:00.000Z</published>
+    <updated>2017-02-25T16:17:42.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1></blockquote>
+<p>上回说到，如何搭建Solr5.5.0，进入Solr控制台。但是，可以看到，此时控制台左边Core选择栏，显示的是<font color="#DC143C">No cores available</font>。也就是说，Solr从5.X开始就不提供默认的Core了，而需要我们自行配置。本文就讲述如何配置第一个Core。<br><img src="https://olwqv7o0u.qnssl.com/image/Solr-index.png" alt="没有Core的Solr控制台"></p>
+<blockquote>
+<h1 id="配置年轻人的第一个Core"><a href="#配置年轻人的第一个Core" class="headerlink" title="配置年轻人的第一个Core"></a>配置年轻人的第一个Core</h1></blockquote>
+<ol>
+<li>首先，进入你原来配置的solr_home/solr目录下，创建一个文件夹，命名成你的CoreName。比如我创建了fuukangunCore。</li>
+<li>接着，将solr_home/configsets/sample_techproducts_configs下的conf文件夹拷贝到solr_home/solr/fuukangunCore文件夹里。</li>
+<li>然后，启动Tomcat，进入Solr控制台，点击左边的No cores available，然后Add Core。在name和instanceDir中填入你的CoreName。比如笔者就要填入fuukangunCore。<font color="#DC143C">注：Solr Core的命名有一定规范，具体可自行百度</font></li>
+<li>最后，原本的No cores available就变成了Core Selector，在此可以选择你的Core。你也可以创建更多的Core。</li>
+</ol>
+<p>但是虽然我们有了Core，依旧缺少核心的东西，就是数据。下一次，我将会介绍如何配置Core的schema和从MySQL导入数据。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      动手搭建年轻人的第一个Solr Core
+    
+    </summary>
+    
+      <category term="学习" scheme="http://yoursite.com/categories/%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="Solr" scheme="http://yoursite.com/tags/Solr/"/>
+    
+  </entry>
   
   <entry>
     <title>Solr学习:Solr5.5.0搭建</title>

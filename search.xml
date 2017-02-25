@@ -3,6 +3,13 @@
   
     
     <entry>
+      <title><![CDATA[Solr学习:Core配置]]></title>
+      <url>%2F2017%2F02%2F25%2FSolr%E5%AD%A6%E4%B9%A0-Core%E9%85%8D%E7%BD%AE%2F</url>
+      <content type="text"><![CDATA[前言 上回说到，如何搭建Solr5.5.0，进入Solr控制台。但是，可以看到，此时控制台左边Core选择栏，显示的是No cores available。也就是说，Solr从5.X开始就不提供默认的Core了，而需要我们自行配置。本文就讲述如何配置第一个Core。 配置年轻人的第一个Core 首先，进入你原来配置的solr_home/solr目录下，创建一个文件夹，命名成你的CoreName。比如我创建了fuukangunCore。 接着，将solr_home/configsets/sample_techproducts_configs下的conf文件夹拷贝到solr_home/solr/fuukangunCore文件夹里。 然后，启动Tomcat，进入Solr控制台，点击左边的No cores available，然后Add Core。在name和instanceDir中填入你的CoreName。比如笔者就要填入fuukangunCore。注：Solr Core的命名有一定规范，具体可自行百度 最后，原本的No cores available就变成了Core Selector，在此可以选择你的Core。你也可以创建更多的Core。 但是虽然我们有了Core，依旧缺少核心的东西，就是数据。下一次，我将会介绍如何配置Core的schema和从MySQL导入数据。]]></content>
+    </entry>
+
+    
+    <entry>
       <title><![CDATA[Solr学习:Solr5.5.0搭建]]></title>
       <url>%2F2017%2F02%2F24%2FSolr%E5%AD%A6%E4%B9%A0-Solr5-5-0%E6%90%AD%E5%BB%BA%2F</url>
       <content type="text"><![CDATA[前言 最近在工作上，由于DB使用了Cobar进行分库，所以表关联无法得以实现，需要在Solr上来进行一些复杂的查询。而且即便不进行分库，DB操作也不建议大数据量的多表进行关联查询，尤其是那种4、5张大表进行join的操作。然后顺带学习和了解一下Solr。 需要注意的是Solr6以上版本需要JDK8，Solr5以上版本需要JDK7。 Solr搭建 下载Solr 5.5.0，并解压到当前目录下。 下载Tomcat，此处我用的是Tomcat8.5.11。 将solr-5.5.0/server/solr-webapp下的webapp文件夹拷贝到Tomcat/webapps下，并将拷贝过来的webapp重命名成solr。（此处建议先把Tomcat/webapps下内容全部清空） 把solr-5.5.0/server/lib/ext中的jar包复制到Tomcat/webapps/solr/WEB-INF/lib目录中。 在任意位置新建solr_home文件夹，我建立在/Users/fuukangun路径下。把solr-5.5.0/server下的solr文件夹，拷贝到刚刚创建的solr_home文件夹下。solr_home就是之后创建索引实例Core的需要的目录 把solr-5.5.0/server/resources下的log4j.properties文件拷贝到Tomcat/webapps/solr/WEB-INF/classes目录下（classes不存在需要手动创建） 打开Tomcat/webapps/solr/WEB-INF下的web.xml文件。找到下面的配置内容，配置solr_home，一开始应该是被注释掉了。 12345&lt;env-entry&gt; &lt;env-entry-name&gt;solr/home&lt;/env-entry-name&gt; &lt;env-entry-value&gt;/put/your/solr/home/here&lt;/env-entry-value&gt; &lt;env-entry-type&gt;java.lang.String&lt;/env-entry-type&gt; &lt;/env-entry&gt; 将env-entry-value值替换为/Users/fuukangun/solr_home/solr，保存。 启动Tomcat，在浏览器输入http://localhost:8080/solr/index.html#/ 就能出现Solr控制台了。]]></content>
