@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-02-25T16:17:42.000Z</updated>
+  <updated>2017-02-25T16:23:26.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2017/02/25/Solr%E5%AD%A6%E4%B9%A0-Core%E9%85%8D%E7%BD%AE/"/>
     <id>http://yoursite.com/2017/02/25/Solr学习-Core配置/</id>
     <published>2017-02-25T13:58:00.000Z</published>
-    <updated>2017-02-25T16:17:42.000Z</updated>
+    <updated>2017-02-25T16:23:26.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1></blockquote>
@@ -31,7 +31,7 @@
 <li>首先，进入你原来配置的solr_home/solr目录下，创建一个文件夹，命名成你的CoreName。比如我创建了fuukangunCore。</li>
 <li>接着，将solr_home/configsets/sample_techproducts_configs下的conf文件夹拷贝到solr_home/solr/fuukangunCore文件夹里。</li>
 <li>然后，启动Tomcat，进入Solr控制台，点击左边的No cores available，然后Add Core。在name和instanceDir中填入你的CoreName。比如笔者就要填入fuukangunCore。<font color="#DC143C">注：Solr Core的命名有一定规范，具体可自行百度</font></li>
-<li>最后，原本的No cores available就变成了Core Selector，在此可以选择你的Core。你也可以创建更多的Core。</li>
+<li>最后，原本的No cores available就变成了Core Selector，在此可以选择你的Core。你也可以创建更多的Core。<font color="#DC143C">现在，你的Core目录下，应该多了conf.properties文件和data文件夹。data文件夹式用于存储索引文件的，而core.properties文件则存放了Core的一些配置信息。</font></li>
 </ol>
 <p>但是虽然我们有了Core，依旧缺少核心的东西，就是数据。下一次，我将会介绍如何配置Core的schema和从MySQL导入数据。</p>
 ]]></content>

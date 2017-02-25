@@ -5,7 +5,7 @@
     <entry>
       <title><![CDATA[Solr学习:Core配置]]></title>
       <url>%2F2017%2F02%2F25%2FSolr%E5%AD%A6%E4%B9%A0-Core%E9%85%8D%E7%BD%AE%2F</url>
-      <content type="text"><![CDATA[前言 上回说到，如何搭建Solr5.5.0，进入Solr控制台。但是，可以看到，此时控制台左边Core选择栏，显示的是No cores available。也就是说，Solr从5.X开始就不提供默认的Core了，而需要我们自行配置。本文就讲述如何配置第一个Core。 配置年轻人的第一个Core 首先，进入你原来配置的solr_home/solr目录下，创建一个文件夹，命名成你的CoreName。比如我创建了fuukangunCore。 接着，将solr_home/configsets/sample_techproducts_configs下的conf文件夹拷贝到solr_home/solr/fuukangunCore文件夹里。 然后，启动Tomcat，进入Solr控制台，点击左边的No cores available，然后Add Core。在name和instanceDir中填入你的CoreName。比如笔者就要填入fuukangunCore。注：Solr Core的命名有一定规范，具体可自行百度 最后，原本的No cores available就变成了Core Selector，在此可以选择你的Core。你也可以创建更多的Core。 但是虽然我们有了Core，依旧缺少核心的东西，就是数据。下一次，我将会介绍如何配置Core的schema和从MySQL导入数据。]]></content>
+      <content type="text"><![CDATA[前言 上回说到，如何搭建Solr5.5.0，进入Solr控制台。但是，可以看到，此时控制台左边Core选择栏，显示的是No cores available。也就是说，Solr从5.X开始就不提供默认的Core了，而需要我们自行配置。本文就讲述如何配置第一个Core。 配置年轻人的第一个Core 首先，进入你原来配置的solr_home/solr目录下，创建一个文件夹，命名成你的CoreName。比如我创建了fuukangunCore。 接着，将solr_home/configsets/sample_techproducts_configs下的conf文件夹拷贝到solr_home/solr/fuukangunCore文件夹里。 然后，启动Tomcat，进入Solr控制台，点击左边的No cores available，然后Add Core。在name和instanceDir中填入你的CoreName。比如笔者就要填入fuukangunCore。注：Solr Core的命名有一定规范，具体可自行百度 最后，原本的No cores available就变成了Core Selector，在此可以选择你的Core。你也可以创建更多的Core。现在，你的Core目录下，应该多了conf.properties文件和data文件夹。data文件夹式用于存储索引文件的，而core.properties文件则存放了Core的一些配置信息。 但是虽然我们有了Core，依旧缺少核心的东西，就是数据。下一次，我将会介绍如何配置Core的schema和从MySQL导入数据。]]></content>
     </entry>
 
     
