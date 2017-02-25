@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-02-24T16:23:27.000Z</updated>
+  <updated>2017-02-25T13:15:32.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2017/02/24/Solr%E5%AD%A6%E4%B9%A0-Solr5-5-0%E6%90%AD%E5%BB%BA/"/>
     <id>http://yoursite.com/2017/02/24/Solr学习-Solr5-5-0搭建/</id>
     <published>2017-02-24T14:58:37.000Z</published>
-    <updated>2017-02-24T16:23:27.000Z</updated>
+    <updated>2017-02-25T13:15:32.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1></blockquote>
@@ -40,7 +40,7 @@
 <p>将env-entry-value值替换为/Users/fuukangun/solr_home/solr，保存。</p>
 </li>
 </ol>
-<p>启动Tomcat，在浏览器输入<a href="http://localhost:8080/solr/index.html#/" target="_blank" rel="external">http://localhost:8080/solr/index.html#/</a> 就能出现Solr控制台了。</p>
+<p>启动Tomcat，在浏览器输入<a href="http://localhost:8080/solr/index.html#/" target="_blank" rel="external">http://localhost:8080/solr/index.html#/</a> 就能出现Solr控制台了。<br><img src="https://olwqv7o0u.qnssl.com/image/Solr-index.png" alt="Solr控制台"></p>
 ]]></content>
     
     <summary type="html">
