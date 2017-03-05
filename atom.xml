@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-02-25T16:24:56.000Z</updated>
+  <updated>2017-03-05T15:50:08.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,46 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Solr学习:为Solr添加数据</title>
+    <link href="http://yoursite.com/2017/03/04/Solr%E5%AD%A6%E4%B9%A0-%E4%B8%BASolr%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE/"/>
+    <id>http://yoursite.com/2017/03/04/Solr学习-为Solr添加数据/</id>
+    <published>2017-03-04T14:48:57.000Z</published>
+    <updated>2017-03-05T15:50:08.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<h1 id="schema配置简介"><a href="#schema配置简介" class="headerlink" title="schema配置简介"></a>schema配置简介</h1></blockquote>
+<p>为什么此处只做一个简介，而不是放一篇详解上来？因为本文主要讲解如何为Solr添加数据，对于schema配置的详解，不是重点。想要了解清楚的各位，可以自行查询，网上很多关于schema的详解。或者也可以直接参看相关的官方wiki：<a href="https://wiki.apache.org/solr/SchemaXml" target="_blank" rel="external">链接直达</a></p>
+<ol>
+<li>把Solr的一个Core当作数据库的一张表，那么其schema就相当于这个表的表结构设计。（本人刚刚接触Solr，如果表述有误，欢迎指正）也就是说，在添加数据之前，我们得先设计好表结构。</li>
+<li>那么，schema的配置文件在哪呢？其实就在solr_home/solr/fuukangun（此处是你的Core name）/conf下找到managed-schema（之前的版本是schema.xml文件）。</li>
+<li>打开managed-schema文件，我们可以看到里面默认配置了很多filed，也就是说默认了很多字段。你可以将里面的filed全删除，配上你想要的字段。但是值得注意的是，类似<em>version</em>和<em>root</em>这种带下划线的字段，是系统保留字段，可以不删除，但建议你的数据库中，表字段不要类似命名。<img src="https://olwqv7o0u.qnssl.com/image/schema.png" alt="managed-schema"></li>
+<li>由于已经有默认配置了，那么我在这里就直接用原本自带的部分字段好了。这里选用id，sku，name三个字段，将其他的field注释或删除。看这几个field名称，应该是用来存储商品信息的。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">&lt;field name=&quot;id&quot; type=&quot;string&quot; indexed=&quot;true&quot; stored=&quot;true&quot; required=&quot;true&quot; multiValued=&quot;false&quot; /&gt;</div><div class="line">&lt;field name=&quot;sku&quot; type=&quot;string&quot; indexed=&quot;true&quot; stored=&quot;true&quot; omitNorms=&quot;true&quot;/&gt;</div><div class="line">&lt;field name=&quot;name&quot; type=&quot;string&quot; indexed=&quot;true&quot; stored=&quot;true&quot;/&gt;</div><div class="line">```  </div><div class="line"></div><div class="line">&gt;# 在Solr控制台添加数据</div><div class="line"></div><div class="line">1. 在Solr控制台选择核心以后，点击下方的Documents按钮。Solr上一条数据可以看成是一个Document。![Documents](https://olwqv7o0u.qnssl.com/image/documentsAdd.png)</div><div class="line">2. Document Type可以选择很多，我在这里选择了JSON。然后在下面填入JSON格式的数据，点击Submit Document。右下角显示Status: success就表示数据添加成功了。我们也可以在这里添加一个数组的对象，不一定要一个个添加。</div><div class="line"></div><div class="line">&gt;# 进行数据查询</div><div class="line"></div><div class="line">选择左边菜单栏里面的Query，点击最下面的Execute Query按钮就会在右边出现查询结果了。上面的q输入框内，就是输入查询条件的，* : * 就是检索所有条件的。比如我们这个索引只有三个字段：id，sku，name。我们根据name模糊查询的话，可以写成name:雀巢* 。*的作用，类似于MySQL中的%。当然，我们也可以精确查询。另外一些设置这里不在简述。</div><div class="line">![](https://olwqv7o0u.qnssl.com/image/query.png)</div><div class="line">### 问题出现：</div><div class="line"></div><div class="line">但是，在点击了Execute Query按钮之后，界面上并没有出现任何数据。于是通过调试，我在控制台发现了服务器400的错误。</div><div class="line">![](https://olwqv7o0u.qnssl.com/image/resultSolr.png)</div><div class="line">个人怀疑是Tomcat上解析URL出错了，我把URL复制下来，粘贴到浏览器的地址栏，把%2F修改为/。结果成功获得了刚刚添加过的数据。</div><div class="line">![](https://olwqv7o0u.qnssl.com/image/urlResult.png)</div><div class="line">### 解决方式：</div><div class="line"></div><div class="line">找到Tomcat/conf目录下的catalina.properties文件，在最下面添加如下代码：org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true</div><div class="line"></div><div class="line">重启Tomcat，就能使Tomcat正确解析出URL了。</div><div class="line"></div><div class="line">### 结果查看：</div><div class="line">然后我们再进一次Solr控制台，就能看到搜索结果了。</div><div class="line">![](https://olwqv7o0u.qnssl.com/image/fixResult.png)</div><div class="line">&gt;# 从数据库添加数据</div><div class="line"></div><div class="line">解决了上面的问题，我们继续来尝试一下如何从数据库导入数据到Solr。</div><div class="line"></div><div class="line">1. 首先在数据库建立相同格式的表，并在表里加几条数据。</div><div class="line">![](https://olwqv7o0u.qnssl.com/image/mysqlData.png)</div><div class="line">2. 要想Solr连接数据库，需要两个jar包：</div><div class="line">	* mysql-connector-java-5.1.41-bin.jar（这个不需要多说，没有的可以自行下载）</div><div class="line">	* solr-5.5.0/dist目录下，solr-dataimporthandler-5.5.0.jar</div><div class="line"></div><div class="line">	将这两个包，拷贝到Tomcat\webapps\solr\WEB-INF\lib目录下。</div><div class="line">3. 配置solr_home/solr/yourCore/conf目录下的solrconf.xml文件。在&lt;requestHandler name=&quot;/select&quot; class=&quot;solr.SearchHandler&quot;&gt;前面上加上一个dataimport的处理的Handler</div></pre></td></tr></table></figure>
+<p><requesthandler name="/dataimport" class="org.apache.solr.handler.dataimport.DataImportHandler"><br>    <lst name="defaults"><br>        <str name="config">data-config.xml</str><br>    </lst><br></requesthandler><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">4. 在同目录下，创建data-config.xml文件</div><div class="line">	* dataSource是数据库数据源。</div><div class="line">	* Entity就是一张表对应的实体，pk是主键，query是查询语句。</div><div class="line">	* Field对应一个字段，column是数据库里的column名，后面的name属性对应着Solr的Filed的名字。</div></pre></td></tr></table></figure></p>
+<p>&lt;?xml version=”1.0” encoding=”UTF-8” ?&gt;</p>
+<p><dataconfig><br>    <datasource type="JdbcDataSource" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://127.0.0.1:3306/solr_data" user="root" password="root" batchsize="-1"><br>　　<document name="goods"><br>        <entity name="goods" pk="id" query="select * from goods"><br>　　　       <field column="id" name="id"><br>　　　       <field column="sku" name="sku"><br>            <field column="name" name="name"><br>　　　  </field></field></field></entity><br>　　</document><br></datasource></dataconfig><br>```</p>
+<ol>
+<li>重启Tomcat，在Solr控制台，选择Dataimport，点击Execute从MySQL导入数据。可能需要稍微等几秒，点击Refresh Status刷新倒入状态，出现下图，表示数据导入成功。<br><img src="https://olwqv7o0u.qnssl.com/image/dataImport.png" alt=""></li>
+<li>点击Query查询数据</li>
+</ol>
+<p>但是原本我们通过控制台添加的数据消失了，这是因为我们在上一步点击Execute导入数据时，勾选了clean的缘故。<br><img src="https://olwqv7o0u.qnssl.com/image/queryMySQL.png" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      作为一个搜索引擎，没数据搜什么？所以本文讲述如何为自己搭建Solr添加数据。
+    
+    </summary>
+    
+      <category term="学习" scheme="http://yoursite.com/categories/%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="Solr" scheme="http://yoursite.com/tags/Solr/"/>
+    
+  </entry>
   
   <entry>
     <title>Solr学习:Core配置</title>
@@ -54,7 +94,7 @@
     <link href="http://yoursite.com/2017/02/24/Solr%E5%AD%A6%E4%B9%A0-Solr5-5-0%E6%90%AD%E5%BB%BA/"/>
     <id>http://yoursite.com/2017/02/24/Solr学习-Solr5-5-0搭建/</id>
     <published>2017-02-24T14:58:37.000Z</published>
-    <updated>2017-02-25T13:15:32.000Z</updated>
+    <updated>2017-03-03T16:38:10.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1></blockquote>
