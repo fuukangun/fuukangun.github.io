@@ -94,9 +94,15 @@
 <meta property="og:site_name" content="fuukangun">
 <meta property="og:description" content="作为一个搜索引擎，没数据搜什么？所以本文讲述如何为自己搭建Solr添加数据。">
 <meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/schema.png">
+<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/documentsAdd.png">
+<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/query.png">
+<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/resultSolr.png">
+<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/urlResult.png">
+<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/fixResult.png">
+<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/mysqlData.png">
 <meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/dataImport.png">
 <meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/queryMySQL.png">
-<meta property="og:updated_time" content="2017-03-05T15:50:08.000Z">
+<meta property="og:updated_time" content="2017-03-06T15:34:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Solr学习:为Solr添加数据">
 <meta name="twitter:description" content="作为一个搜索引擎，没数据搜什么？所以本文讲述如何为自己搭建Solr添加数据。">
@@ -412,15 +418,55 @@
 <ol>
 <li>把Solr的一个Core当作数据库的一张表，那么其schema就相当于这个表的表结构设计。（本人刚刚接触Solr，如果表述有误，欢迎指正）也就是说，在添加数据之前，我们得先设计好表结构。</li>
 <li>那么，schema的配置文件在哪呢？其实就在solr_home/solr/fuukangun（此处是你的Core name）/conf下找到managed-schema（之前的版本是schema.xml文件）。</li>
-<li>打开managed-schema文件，我们可以看到里面默认配置了很多filed，也就是说默认了很多字段。你可以将里面的filed全删除，配上你想要的字段。但是值得注意的是，类似<em>version</em>和<em>root</em>这种带下划线的字段，是系统保留字段，可以不删除，但建议你的数据库中，表字段不要类似命名。<img src="https://olwqv7o0u.qnssl.com/image/schema.png" alt="managed-schema"></li>
-<li>由于已经有默认配置了，那么我在这里就直接用原本自带的部分字段好了。这里选用id，sku，name三个字段，将其他的field注释或删除。看这几个field名称，应该是用来存储商品信息的。</li>
+<li>打开managed-schema文件，我们可以看到里面默认配置了很多filed，也就是说默认了很多字段。你可以将里面的filed全删除，配上你想要的字段。但是值得注意的是，类似_version_和_root_这种带下划线的字段，是系统保留字段，可以不删除，但建议你的数据库中，表字段不要类似命名。<img src="https://olwqv7o0u.qnssl.com/image/schema.png" alt="managed-schema"></li>
+<li>由于已经有默认配置了，那么我在这里就直接用原本自带的部分字段好了。这里选用id，sku，name三个字段，将其他的field注释或删除。看这几个field名称，应该是用来存储商品信息的。 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;field name=&quot;id&quot; type=&quot;string&quot; indexed=&quot;true&quot; stored=&quot;true&quot; required=&quot;true&quot; multiValued=&quot;false&quot; /&gt;</div><div class="line">&lt;field name=&quot;sku&quot; type=&quot;string&quot; indexed=&quot;true&quot; stored=&quot;true&quot; omitNorms=&quot;true&quot;/&gt;</div><div class="line">&lt;field name=&quot;name&quot; type=&quot;string&quot; indexed=&quot;true&quot; stored=&quot;true&quot;/&gt;</div></pre></td></tr></table></figure>
+</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">&lt;field name=&quot;id&quot; type=&quot;string&quot; indexed=&quot;true&quot; stored=&quot;true&quot; required=&quot;true&quot; multiValued=&quot;false&quot; /&gt;</div><div class="line">&lt;field name=&quot;sku&quot; type=&quot;string&quot; indexed=&quot;true&quot; stored=&quot;true&quot; omitNorms=&quot;true&quot;/&gt;</div><div class="line">&lt;field name=&quot;name&quot; type=&quot;string&quot; indexed=&quot;true&quot; stored=&quot;true&quot;/&gt;</div><div class="line">```  </div><div class="line"></div><div class="line">&gt;# 在Solr控制台添加数据</div><div class="line"></div><div class="line">1. 在Solr控制台选择核心以后，点击下方的Documents按钮。Solr上一条数据可以看成是一个Document。![Documents](https://olwqv7o0u.qnssl.com/image/documentsAdd.png)</div><div class="line">2. Document Type可以选择很多，我在这里选择了JSON。然后在下面填入JSON格式的数据，点击Submit Document。右下角显示Status: success就表示数据添加成功了。我们也可以在这里添加一个数组的对象，不一定要一个个添加。</div><div class="line"></div><div class="line">&gt;# 进行数据查询</div><div class="line"></div><div class="line">选择左边菜单栏里面的Query，点击最下面的Execute Query按钮就会在右边出现查询结果了。上面的q输入框内，就是输入查询条件的，* : * 就是检索所有条件的。比如我们这个索引只有三个字段：id，sku，name。我们根据name模糊查询的话，可以写成name:雀巢* 。*的作用，类似于MySQL中的%。当然，我们也可以精确查询。另外一些设置这里不在简述。</div><div class="line">![](https://olwqv7o0u.qnssl.com/image/query.png)</div><div class="line">### 问题出现：</div><div class="line"></div><div class="line">但是，在点击了Execute Query按钮之后，界面上并没有出现任何数据。于是通过调试，我在控制台发现了服务器400的错误。</div><div class="line">![](https://olwqv7o0u.qnssl.com/image/resultSolr.png)</div><div class="line">个人怀疑是Tomcat上解析URL出错了，我把URL复制下来，粘贴到浏览器的地址栏，把%2F修改为/。结果成功获得了刚刚添加过的数据。</div><div class="line">![](https://olwqv7o0u.qnssl.com/image/urlResult.png)</div><div class="line">### 解决方式：</div><div class="line"></div><div class="line">找到Tomcat/conf目录下的catalina.properties文件，在最下面添加如下代码：org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true</div><div class="line"></div><div class="line">重启Tomcat，就能使Tomcat正确解析出URL了。</div><div class="line"></div><div class="line">### 结果查看：</div><div class="line">然后我们再进一次Solr控制台，就能看到搜索结果了。</div><div class="line">![](https://olwqv7o0u.qnssl.com/image/fixResult.png)</div><div class="line">&gt;# 从数据库添加数据</div><div class="line"></div><div class="line">解决了上面的问题，我们继续来尝试一下如何从数据库导入数据到Solr。</div><div class="line"></div><div class="line">1. 首先在数据库建立相同格式的表，并在表里加几条数据。</div><div class="line">![](https://olwqv7o0u.qnssl.com/image/mysqlData.png)</div><div class="line">2. 要想Solr连接数据库，需要两个jar包：</div><div class="line">	* mysql-connector-java-5.1.41-bin.jar（这个不需要多说，没有的可以自行下载）</div><div class="line">	* solr-5.5.0/dist目录下，solr-dataimporthandler-5.5.0.jar</div><div class="line"></div><div class="line">	将这两个包，拷贝到Tomcat\webapps\solr\WEB-INF\lib目录下。</div><div class="line">3. 配置solr_home/solr/yourCore/conf目录下的solrconf.xml文件。在&lt;requestHandler name=&quot;/select&quot; class=&quot;solr.SearchHandler&quot;&gt;前面上加上一个dataimport的处理的Handler</div></pre></td></tr></table></figure>
-<p><requesthandler name="/dataimport" class="org.apache.solr.handler.dataimport.DataImportHandler"><br>    <lst name="defaults"><br>        <str name="config">data-config.xml</str><br>    </lst><br></requesthandler><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">4. 在同目录下，创建data-config.xml文件</div><div class="line">	* dataSource是数据库数据源。</div><div class="line">	* Entity就是一张表对应的实体，pk是主键，query是查询语句。</div><div class="line">	* Field对应一个字段，column是数据库里的column名，后面的name属性对应着Solr的Filed的名字。</div></pre></td></tr></table></figure></p>
-<p>&lt;?xml version=”1.0” encoding=”UTF-8” ?&gt;</p>
-<p><dataconfig><br>    <datasource type="JdbcDataSource" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://127.0.0.1:3306/solr_data" user="root" password="root" batchsize="-1"><br>　　<document name="goods"><br>        <entity name="goods" pk="id" query="select * from goods"><br>　　　       <field column="id" name="id"><br>　　　       <field column="sku" name="sku"><br>            <field column="name" name="name"><br>　　　  </field></field></field></entity><br>　　</document><br></datasource></dataconfig><br>```</p>
+<blockquote>
+<h1 id="在Solr控制台添加数据"><a href="#在Solr控制台添加数据" class="headerlink" title="在Solr控制台添加数据"></a>在Solr控制台添加数据</h1></blockquote>
 <ol>
-<li>重启Tomcat，在Solr控制台，选择Dataimport，点击Execute从MySQL导入数据。可能需要稍微等几秒，点击Refresh Status刷新倒入状态，出现下图，表示数据导入成功。<br><img src="https://olwqv7o0u.qnssl.com/image/dataImport.png" alt=""></li>
+<li>在Solr控制台选择核心以后，点击下方的Documents按钮。Solr上一条数据可以看成是一个Document。<img src="https://olwqv7o0u.qnssl.com/image/documentsAdd.png" alt="Documents"></li>
+<li>Document Type可以选择很多，我在这里选择了JSON。然后在下面填入JSON格式的数据，点击Submit Document。右下角显示Status: success就表示数据添加成功了。我们也可以在这里添加一个数组的对象，不一定要一个个添加。</li>
+</ol>
+<blockquote>
+<h1 id="进行数据查询"><a href="#进行数据查询" class="headerlink" title="进行数据查询"></a>进行数据查询</h1></blockquote>
+<p>选择左边菜单栏里面的Query，点击最下面的Execute Query按钮就会在右边出现查询结果了。上面的q输入框内，就是输入查询条件的，*:*就是检索所有条件的。比如我们这个索引只有三个字段：id，sku，name。我们根据name模糊查询的话，可以写成name:雀巢*。*的作用，类似于MySQL中的%。当然，我们也可以精确查询。另外一些设置这里不在简述。<br><img src="https://olwqv7o0u.qnssl.com/image/query.png" alt=""></p>
+<font color="#DC143C">1. 问题出现</font>
+
+<p>但是，在点击了Execute Query按钮之后，界面上并没有出现任何数据。于是通过调试，我在控制台发现了服务器400的错误。<br><img src="https://olwqv7o0u.qnssl.com/image/resultSolr.png" alt=""><br>个人怀疑是Tomcat上解析URL出错了，我把URL复制下来，粘贴到浏览器的地址栏，把%2F修改为/。结果成功获得了刚刚添加过的数据。<br><img src="https://olwqv7o0u.qnssl.com/image/urlResult.png" alt=""></p>
+<font color="#DC143C">2. 解决方式</font>
+
+<p>找到Tomcat/conf目录下的catalina.properties文件，在最下面添加如下代码：org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true<br>重启Tomcat，就能使Tomcat正确解析出URL了。</p>
+<font color="#DC143C">3. 结果查看</font>
+
+<p>然后我们再进一次Solr控制台，就能看到搜索结果了。<img src="https://olwqv7o0u.qnssl.com/image/fixResult.png" alt=""></p>
+<blockquote>
+<h1 id="从MySQL导入数据到Solr"><a href="#从MySQL导入数据到Solr" class="headerlink" title="从MySQL导入数据到Solr"></a>从MySQL导入数据到Solr</h1></blockquote>
+<p>解决了上面的问题，我们继续来尝试一下如何从数据库导入数据到Solr。</p>
+<ol>
+<li>首先在数据库建立相同格式的表，并在表里加几条数据。<br><img src="https://olwqv7o0u.qnssl.com/image/mysqlData.png" alt=""></li>
+<li><p>要想Solr连接数据库，需要两个jar包：</p>
+<ul>
+<li>mysql-connector-java-5.1.41-bin.jar（这个不需要多说，没有的可以自行下载）</li>
+<li><p>solr-5.5.0/dist目录下，solr-dataimporthandler-5.5.0.jar</p>
+<p>将这两个包，拷贝到Tomcat\webapps\solr\WEB-INF\lib目录下。</p>
+</li>
+</ul>
+</li>
+<li><p>配置solr_home/solr/yourCore/conf目录下的solrconf.xml文件。在<requesthandler name="/select" class="solr.SearchHandler">前面上加上一个dataimport的处理的Handler</requesthandler></p>
+ <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">requestHandler</span> <span class="attr">name</span>=<span class="string">"/dataimport"</span> <span class="attr">class</span>=<span class="string">"org.apache.solr.handler.dataimport.DataImportHandler"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">lst</span> <span class="attr">name</span>=<span class="string">"defaults"</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">str</span> <span class="attr">name</span>=<span class="string">"config"</span>&gt;</span>data-config.xml<span class="tag">&lt;/<span class="name">str</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">lst</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">requestHandler</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>在同目录下，创建data-config.xml文件</p>
+<ul>
+<li>dataSource是数据库数据源。</li>
+<li>Entity就是一张表对应的实体，pk是主键，query是查询语句。</li>
+<li><p>Field对应一个字段，column是数据库里的column名，后面的name属性对应着Solr的Filed的名字。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">dataConfig</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">"JdbcDataSource"</span> <span class="attr">driver</span>=<span class="string">"com.mysql.jdbc.Driver"</span> <span class="attr">url</span>=<span class="string">"jdbc:mysql://127.0.0.1:3306/solr_data"</span> <span class="attr">user</span>=<span class="string">"root"</span> <span class="attr">password</span>=<span class="string">"root"</span> <span class="attr">batchSize</span>=<span class="string">"-1"</span> /&gt;</span></div><div class="line">　　<span class="tag">&lt;<span class="name">document</span> <span class="attr">name</span>=<span class="string">"goods"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">entity</span> <span class="attr">name</span>=<span class="string">"goods"</span> <span class="attr">pk</span>=<span class="string">"id"</span></span></div><div class="line">                <span class="attr">query</span>=<span class="string">"select * from goods"</span>&gt;</div><div class="line">　　　       <span class="tag">&lt;<span class="name">field</span> <span class="attr">column</span>=<span class="string">"id"</span> <span class="attr">name</span>=<span class="string">"id"</span>/&gt;</span></div><div class="line">　　　       <span class="tag">&lt;<span class="name">field</span> <span class="attr">column</span>=<span class="string">"sku"</span> <span class="attr">name</span>=<span class="string">"sku"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">field</span> <span class="attr">column</span>=<span class="string">"name"</span> <span class="attr">name</span>=<span class="string">"name"</span>/&gt;</span></div><div class="line">　　　  <span class="tag">&lt;/<span class="name">entity</span>&gt;</span></div><div class="line">　　<span class="tag">&lt;/<span class="name">document</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dataConfig</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>重启Tomcat，在Solr控制台，选择Dataimport，点击Execute从MySQL导入数据。可能需要稍微等几秒，点击Refresh Status刷新倒入状态，出现下图，表示数据导入成功。<br><img src="https://olwqv7o0u.qnssl.com/image/dataImport.png" alt=""></p>
+</li>
 <li>点击Query查询数据</li>
 </ol>
 <p>但是原本我们通过控制台添加的数据消失了，这是因为我们在上一步点击Execute导入数据时，勾选了clean的缘故。<br><img src="https://olwqv7o0u.qnssl.com/image/queryMySQL.png" alt=""></p>
@@ -627,7 +673,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#schema配置简介"><span class="nav-number">1.</span> <span class="nav-text">schema配置简介</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#schema配置简介"><span class="nav-number">1.</span> <span class="nav-text">schema配置简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在Solr控制台添加数据"><span class="nav-number">2.</span> <span class="nav-text">在Solr控制台添加数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进行数据查询"><span class="nav-number">3.</span> <span class="nav-text">进行数据查询</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#从MySQL导入数据到Solr"><span class="nav-number">4.</span> <span class="nav-text">从MySQL导入数据到Solr</span></a></li></ol></div>
             
 
           </div>
