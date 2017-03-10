@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2017/03/10/Solr%E5%AD%A6%E4%B9%A0-SolrJ-%E6%93%8D%E4%BD%9CSolr%E7%9A%84API/</loc>
+    
+    <lastmod>2017-03-10T17:09:01.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2017/03/09/Solr%E5%AD%A6%E4%B9%A0-managed-schema%E8%AF%A6%E8%A7%A3/</loc>
     
-    <lastmod>2017-03-09T16:03:44.000Z</lastmod>
+    <lastmod>2017-03-10T15:52:31.000Z</lastmod>
     
   </url>
   
