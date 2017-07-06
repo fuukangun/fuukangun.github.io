@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-07-06T14:56:12.000Z</updated>
+  <updated>2017-07-06T15:00:40.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2017/04/15/Java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/"/>
     <id>http://yoursite.com/2017/04/15/Java反射机制/</id>
     <published>2017-04-15T15:20:46.000Z</published>
-    <updated>2017-07-06T14:56:12.000Z</updated>
+    <updated>2017-07-06T15:00:40.000Z</updated>
     
     <content type="html"><![CDATA[<h1 id="什么是反射"><a href="#什么是反射" class="headerlink" title="什么是反射"></a>什么是反射</h1><p>Java程序允许在<strong>运行期间</strong>，检测和修改自身信息，并且可以操作对象的属性和方法。这种<strong>动态</strong>获取类的信息以及动态调用对象的方法的功能来自于Java语言的反射（Reflection）机制。</p>
 <p>Java反射框架主要提供以下功能：</p>
@@ -38,15 +38,15 @@
 <h1 id="使用反射"><a href="#使用反射" class="headerlink" title="使用反射"></a>使用反射</h1><h2 id="反射的几个重要类"><a href="#反射的几个重要类" class="headerlink" title="反射的几个重要类"></a>反射的几个重要类</h2><ul>
 <li>Field：描述类的域</li>
 <li>Method：描述类的方法</li>
-<li><p>Constructor：描述类的构造器</p>
-<h2 id="所有的域相关方法-包括获取超类的-："><a href="#所有的域相关方法-包括获取超类的-：" class="headerlink" title="所有的域相关方法(包括获取超类的)："></a>所有的域相关方法(包括获取超类的)：</h2></li>
-<li><p>getFields</p>
-</li>
+<li>Constructor：描述类的构造器</li>
+</ul>
+<h2 id="所有的域相关方法-包括获取超类的-："><a href="#所有的域相关方法-包括获取超类的-：" class="headerlink" title="所有的域相关方法(包括获取超类的)："></a>所有的域相关方法(包括获取超类的)：</h2><ul>
+<li>getFields</li>
 <li>getMethods</li>
-<li><p>getConstructors</p>
-<h2 id="private和protected域-不包含超类-："><a href="#private和protected域-不包含超类-：" class="headerlink" title="private和protected域(不包含超类)："></a>private和protected域(不包含超类)：</h2></li>
-<li><p>gettDeclaredFields</p>
-</li>
+<li>getConstructors</li>
+</ul>
+<h2 id="private和protected域-不包含超类-："><a href="#private和protected域-不包含超类-：" class="headerlink" title="private和protected域(不包含超类)："></a>private和protected域(不包含超类)：</h2><ul>
+<li>gettDeclaredFields</li>
 <li>gettDeclaredMethods</li>
 <li><p>gettDeclaredConstructors</p>
 <p>⚠️注意：如果想获取所有域，并且包含超类。只要循环调用Class. getSuperclass()方法，再调用上述获取的所有域的方法即可。当超类为Object时，可以跳出循环，不然会多获得两个成员变量。</p>
