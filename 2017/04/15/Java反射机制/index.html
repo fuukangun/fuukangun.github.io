@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Solr," />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -87,18 +87,16 @@
 
 
 
-<meta name="description" content="动手搭建年轻人的第一个Solr Core">
+<meta name="description" content="当Java程序需要动态地创建对象并调用其属性，在程序运行时去获取对象的属性和方法时，那你就该用到反射了。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Solr学习:Core配置">
-<meta property="og:url" content="http://yoursite.com/2017/02/25/Solr学习-Core配置/index.html">
+<meta property="og:title" content="Java反射机制">
+<meta property="og:url" content="http://yoursite.com/2017/04/15/Java反射机制/index.html">
 <meta property="og:site_name" content="fuukangun">
-<meta property="og:description" content="动手搭建年轻人的第一个Solr Core">
-<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/Solr-index.png">
-<meta property="og:updated_time" content="2017-02-25T16:24:56.000Z">
+<meta property="og:description" content="当Java程序需要动态地创建对象并调用其属性，在程序运行时去获取对象的属性和方法时，那你就该用到反射了。">
+<meta property="og:updated_time" content="2017-07-06T14:56:12.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Solr学习:Core配置">
-<meta name="twitter:description" content="动手搭建年轻人的第一个Solr Core">
-<meta name="twitter:image" content="https://olwqv7o0u.qnssl.com/image/Solr-index.png">
+<meta name="twitter:title" content="Java反射机制">
+<meta name="twitter:description" content="当Java程序需要动态地创建对象并调用其属性，在程序运行时去获取对象的属性和方法时，那你就该用到反射了。">
 
 
 
@@ -126,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/02/25/Solr学习-Core配置/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/15/Java反射机制/"/>
 
 
 
 
 
-  <title> Solr学习:Core配置 | fuukangun </title>
+  <title> Java反射机制 | fuukangun </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -293,7 +291,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/25/Solr学习-Core配置/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/15/Java反射机制/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="fuukangun">
@@ -317,7 +315,7 @@
             
             
               
-                Solr学习:Core配置
+                Java反射机制
               
             
           </h1>
@@ -332,8 +330,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-25T21:58:00+08:00">
-                2017-02-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-15T23:20:46+08:00">
+                2017-04-15
               </time>
             
 
@@ -379,7 +377,7 @@
 
           
               <div class="post-description">
-                  动手搭建年轻人的第一个Solr Core
+                  当Java程序需要动态地创建对象并调用其属性，在程序运行时去获取对象的属性和方法时，那你就该用到反射了。
               </div>
           
 
@@ -394,18 +392,47 @@
       
 
       
-        <blockquote>
-<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1></blockquote>
-<p>上回说到，如何搭建Solr5.5.0，进入Solr控制台。但是，可以看到，此时控制台左边Core选择栏，显示的是<font color="#DC143C">No cores available</font>。也就是说，Solr从5.X开始就不提供默认的Core了，而需要我们自行配置。本文就讲述如何配置第一个Core。<br><img src="https://olwqv7o0u.qnssl.com/image/Solr-index.png" alt="没有Core的Solr控制台"></p>
-<blockquote>
-<h1 id="配置年轻人的第一个Core"><a href="#配置年轻人的第一个Core" class="headerlink" title="配置年轻人的第一个Core"></a>配置年轻人的第一个Core</h1></blockquote>
+        <h1 id="什么是反射"><a href="#什么是反射" class="headerlink" title="什么是反射"></a>什么是反射</h1><p>Java程序允许在<strong>运行期间</strong>，检测和修改自身信息，并且可以操作对象的属性和方法。这种<strong>动态</strong>获取类的信息以及动态调用对象的方法的功能来自于Java语言的反射（Reflection）机制。</p>
+<p>Java反射框架主要提供以下功能：</p>
 <ol>
-<li>首先，进入你原来配置的solr_home/solr目录下，创建一个文件夹，命名成你的CoreName。比如我创建了fuukangunCore。</li>
-<li>接着，将solr_home/configsets/sample_techproducts_configs下的conf文件夹拷贝到solr_home/solr/fuukangunCore文件夹里。</li>
-<li>然后，启动Tomcat，进入Solr控制台，点击左边的No cores available，然后Add Core。在name和instanceDir中填入你的CoreName。比如笔者就要填入fuukangunCore。<font color="#DC143C">注：Solr Core的命名有一定规范，具体可自行百度</font></li>
-<li>最后，原本的No cores available就变成了Core Selector，在此可以选择你的Core。你也可以创建更多的Core。<font color="#DC143C">现在，你的Core目录下，应该多了core.properties文件和data文件夹。data文件夹式用于存储索引文件的，而core.properties文件则存放了Core的一些配置信息。</font></li>
+<li>在运行时判断任意一个对象所属的类；</li>
+<li>在运行时构造任意一个类的对象；</li>
+<li>在运行时判断任意一个类所具有的成员变量和方法；</li>
+<li>在运行时调用任意一个对象的方法，包括private方法；</li>
 </ol>
-<p>但是虽然我们有了Core，依旧缺少核心的东西，就是数据。下一次，我将会介绍如何配置Core的schema和从MySQL导入数据。</p>
+<p>⚠️注意：是在<strong>程序运行时</strong>，而非编译时。</p>
+<p>例如我们有一个类Person，一个类Student extend Person。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Person person = <span class="keyword">new</span> Student()；</div></pre></td></tr></table></figure>
+<p>那么对象person在编译时类型时Person，但是运行时的类型却是Student。</p>
+<h1 id="反射的用途"><a href="#反射的用途" class="headerlink" title="反射的用途"></a>反射的用途</h1><p>反射最重要的用途是开发各种各样的通用框架。例如Spring等，程序需要根据配置文件或者注解，去动态的加载对象，这个时候就需要用到反射了。</p>
+<h1 id="使用反射"><a href="#使用反射" class="headerlink" title="使用反射"></a>使用反射</h1><h2 id="反射的几个重要类"><a href="#反射的几个重要类" class="headerlink" title="反射的几个重要类"></a>反射的几个重要类</h2><ul>
+<li>Field：描述类的域</li>
+<li>Method：描述类的方法</li>
+<li><p>Constructor：描述类的构造器</p>
+<h2 id="所有的域相关方法-包括获取超类的-："><a href="#所有的域相关方法-包括获取超类的-：" class="headerlink" title="所有的域相关方法(包括获取超类的)："></a>所有的域相关方法(包括获取超类的)：</h2></li>
+<li><p>getFields</p>
+</li>
+<li>getMethods</li>
+<li><p>getConstructors</p>
+<h2 id="private和protected域-不包含超类-："><a href="#private和protected域-不包含超类-：" class="headerlink" title="private和protected域(不包含超类)："></a>private和protected域(不包含超类)：</h2></li>
+<li><p>gettDeclaredFields</p>
+</li>
+<li>gettDeclaredMethods</li>
+<li><p>gettDeclaredConstructors</p>
+<p>⚠️注意：如果想获取所有域，并且包含超类。只要循环调用Class. getSuperclass()方法，再调用上述获取的所有域的方法即可。当超类为Object时，可以跳出循环，不然会多获得两个成员变量。</p>
+</li>
+</ul>
+<h2 id="加载类"><a href="#加载类" class="headerlink" title="加载类"></a>加载类</h2><p> 加载类有三种方法，最常用的是Object.class。如果使用Class.forName函数，入参必须是完整的路径。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 加载类的3种方法</span></div><div class="line">Class clazz = Class.forName(<span class="string">"com.demo.reflect.Person"</span>);</div><div class="line">Class clazz1 = <span class="keyword">new</span> Person().getClass();</div><div class="line">Class class2 = Person.class;</div></pre></td></tr></table></figure>
+<h2 id="通过构造函数实例化类"><a href="#通过构造函数实例化类" class="headerlink" title="通过构造函数实例化类"></a>通过构造函数实例化类</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Class clazz = Person.class;</div><div class="line">Constructor c = clazz.getDeclaredConstructor(<span class="keyword">new</span> Class[] &#123; String.class &#125;);</div><div class="line"><span class="comment">// 由于构造函数是private的，所以需要屏蔽Java语言的访问检查</span></div><div class="line">c.setAccessible(<span class="keyword">true</span>);</div><div class="line">Person p = (Person) c.newInstance(<span class="keyword">new</span> Object[] &#123; <span class="string">"I'm a reflect name!"</span> &#125;);</div></pre></td></tr></table></figure>
+<h2 id="获取并调用类的无参方法"><a href="#获取并调用类的无参方法" class="headerlink" title="获取并调用类的无参方法"></a>获取并调用类的无参方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Class clazz = Person.class;</div><div class="line">Constructor c = clazz.getConstructor(<span class="keyword">null</span>);</div><div class="line">Person p = (Person) c.newInstance(<span class="keyword">null</span>);</div><div class="line">Method method = clazz.getMethod(<span class="string">"fun"</span>, <span class="keyword">null</span>);</div><div class="line">method.invoke(p, <span class="keyword">null</span>);</div></pre></td></tr></table></figure>
+<h2 id="获取并调用类的含参方法"><a href="#获取并调用类的含参方法" class="headerlink" title="获取并调用类的含参方法"></a>获取并调用类的含参方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Class clazz = Person.class;</div><div class="line">Constructor c = clazz.getConstructor(<span class="keyword">null</span>);</div><div class="line">Person p = (Person) c.newInstance(<span class="keyword">null</span>);</div><div class="line">Method method = clazz.getMethod(<span class="string">"fun"</span>, <span class="keyword">new</span> Class[] &#123; String.class &#125;);</div><div class="line">method.invoke(p, <span class="keyword">new</span> Object[] &#123; <span class="string">"I'm a reflect method!"</span> &#125;);</div></pre></td></tr></table></figure>
+<h2 id="获取类的字段"><a href="#获取类的字段" class="headerlink" title="获取类的字段"></a>获取类的字段</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">Class clazz = Person.class;</div><div class="line">Constructor c = clazz.getDeclaredConstructor(<span class="keyword">new</span> Class[] &#123; String.class &#125;);</div><div class="line"><span class="comment">// 由于构造函数是 private 的，所以需要获取控制权限</span></div><div class="line">c.setAccessible(<span class="keyword">true</span>);</div><div class="line">Person p = (Person) c.newInstance(<span class="keyword">new</span> Object[] &#123; <span class="string">"I'm a reflect name!"</span> &#125;);</div><div class="line">Field f = clazz.getField(<span class="string">"name"</span>);</div><div class="line">Object value = f.get(p);</div><div class="line">Class type = f.getType();</div><div class="line">System.out.println(type);</div><div class="line"><span class="keyword">if</span> (type.equals(String.class)) &#123;</div><div class="line">    System.out.println((String) value);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="使用反射的注意点"><a href="#使用反射的注意点" class="headerlink" title="使用反射的注意点"></a>使用反射的注意点</h1><ol>
+<li>利用反射机制，开发者可以跨过权限的限制，一定程度上会影响封装性和安全。</li>
+<li>反射会额外消耗一定的系统资源，如果大量使用，并不做任何缓存，会导致性能问题。可以参照对比apache和Spring的BeanCopy。</li>
+<li>如果不需要动态的创建对象，那还是别用反射了。</li>
+</ol>
 
       
     </div>
@@ -429,7 +456,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Solr/" rel="tag"># Solr</a>
+            <a href="/tags/Java/" rel="tag"># Java</a>
           
         </div>
       
@@ -442,8 +469,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/24/Solr学习-Solr5-5-0搭建/" rel="next" title="Solr学习:Solr5.5.0搭建">
-                <i class="fa fa-chevron-left"></i> Solr学习:Solr5.5.0搭建
+              <a href="/2017/04/12/转-Solr文本分析/" rel="next" title="转:Solr文本分析">
+                <i class="fa fa-chevron-left"></i> 转:Solr文本分析
               </a>
             
           </div>
@@ -451,10 +478,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/04/Solr学习-为Solr添加数据/" rel="prev" title="Solr学习:为Solr添加数据">
-                Solr学习:为Solr添加数据 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -590,7 +613,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置年轻人的第一个Core"><span class="nav-number">2.</span> <span class="nav-text">配置年轻人的第一个Core</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是反射"><span class="nav-number">1.</span> <span class="nav-text">什么是反射</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#反射的用途"><span class="nav-number">2.</span> <span class="nav-text">反射的用途</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用反射"><span class="nav-number">3.</span> <span class="nav-text">使用反射</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#反射的几个重要类"><span class="nav-number">3.1.</span> <span class="nav-text">反射的几个重要类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#所有的域相关方法-包括获取超类的-："><span class="nav-number">3.2.</span> <span class="nav-text">所有的域相关方法(包括获取超类的)：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#private和protected域-不包含超类-："><span class="nav-number">3.3.</span> <span class="nav-text">private和protected域(不包含超类)：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载类"><span class="nav-number">3.4.</span> <span class="nav-text">加载类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过构造函数实例化类"><span class="nav-number">3.5.</span> <span class="nav-text">通过构造函数实例化类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取并调用类的无参方法"><span class="nav-number">3.6.</span> <span class="nav-text">获取并调用类的无参方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取并调用类的含参方法"><span class="nav-number">3.7.</span> <span class="nav-text">获取并调用类的含参方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取类的字段"><span class="nav-number">3.8.</span> <span class="nav-text">获取类的字段</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用反射的注意点"><span class="nav-number">4.</span> <span class="nav-text">使用反射的注意点</span></a></li></ol></div>
             
 
           </div>
