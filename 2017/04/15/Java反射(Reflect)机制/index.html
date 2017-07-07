@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Solr," />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -87,16 +87,16 @@
 
 
 
-<meta name="description" content="其实不管用什么工具，配置文件都是需要讲解一下，虽然在上一篇文章中schema相关的被我一笔带过了。">
+<meta name="description" content="当你的Java程序需要动态地创建对象并调用其属性，在程序运行时去获取对象的属性和方法时，那你就该用到反射了。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Solr学习:managed-schema详解">
-<meta property="og:url" content="http://yoursite.com/2017/03/09/Solr学习-managed-schema详解/index.html">
+<meta property="og:title" content="Java反射(Reflect)机制">
+<meta property="og:url" content="http://yoursite.com/2017/04/15/Java反射(Reflect)机制/index.html">
 <meta property="og:site_name" content="fuukangun">
-<meta property="og:description" content="其实不管用什么工具，配置文件都是需要讲解一下，虽然在上一篇文章中schema相关的被我一笔带过了。">
-<meta property="og:updated_time" content="2017-03-10T15:52:31.000Z">
+<meta property="og:description" content="当你的Java程序需要动态地创建对象并调用其属性，在程序运行时去获取对象的属性和方法时，那你就该用到反射了。">
+<meta property="og:updated_time" content="2017-07-07T15:44:09.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Solr学习:managed-schema详解">
-<meta name="twitter:description" content="其实不管用什么工具，配置文件都是需要讲解一下，虽然在上一篇文章中schema相关的被我一笔带过了。">
+<meta name="twitter:title" content="Java反射(Reflect)机制">
+<meta name="twitter:description" content="当你的Java程序需要动态地创建对象并调用其属性，在程序运行时去获取对象的属性和方法时，那你就该用到反射了。">
 
 
 
@@ -124,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/03/09/Solr学习-managed-schema详解/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/15/Java反射(Reflect)机制/"/>
 
 
 
 
 
-  <title> Solr学习:managed-schema详解 | fuukangun </title>
+  <title> Java反射(Reflect)机制 | fuukangun </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -291,7 +291,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/09/Solr学习-managed-schema详解/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/15/Java反射(Reflect)机制/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="fuukangun">
@@ -315,7 +315,7 @@
             
             
               
-                Solr学习:managed-schema详解
+                Java反射(Reflect)机制
               
             
           </h1>
@@ -330,8 +330,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-09T22:47:31+08:00">
-                2017-03-09
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-15T23:20:46+08:00">
+                2017-04-15
               </time>
             
 
@@ -377,7 +377,7 @@
 
           
               <div class="post-description">
-                  其实不管用什么工具，配置文件都是需要讲解一下，虽然在上一篇文章中schema相关的被我一笔带过了。
+                  当你的Java程序需要动态地创建对象并调用其属性，在程序运行时去获取对象的属性和方法时，那你就该用到反射了。
               </div>
           
 
@@ -392,140 +392,46 @@
       
 
       
-        <blockquote>
-<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1></blockquote>
-<p>本文很大程度借鉴抄袭转载自：<a href="http://www.cnblogs.com/langfanyun/tag/Solr/" target="_blank" rel="external">一剑侵心的博客:关于Solr学习的那部分</a></p>
-<p>在公司自己搭建Solr玩的时候，因为用的JDK是1.7版本的，所以安装了Solr5.3.1(大概是这个版本吧，记不清了，也可能是4.x的)。当时的配置文件叫schema.xml，搞得我一开始没找到配置文件，还以为在官网下了一个假Solr。结果Solr不知道从5.x版本开始，虽然配置文件还是xml格式，但是改名叫managed-schema，还是不带后缀的那种，简直了。</p>
-<p>其实managed-schema的格式简单来看就是下面这个样子的：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">schema</span> <span class="attr">name</span>=<span class="string">"example"</span> <span class="attr">version</span>=<span class="string">"1.6"</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">field</span>/&gt;</span>  </div><div class="line">   <span class="tag">&lt;<span class="name">dynamicField</span>/&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">uniqueKey</span>&gt;</span>id<span class="tag">&lt;/<span class="name">uniqueKey</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">copyField</span>/&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">fieldType</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">schema</span>&gt;</span></div></pre></td></tr></table></figure>
-<blockquote>
-<h1 id="field元素"><a href="#field元素" class="headerlink" title="field元素"></a>field元素</h1></blockquote>
-<h2 id="特殊之处"><a href="#特殊之处" class="headerlink" title="特殊之处"></a>特殊之处</h2><p>field用来配置document中的字段，类似于数据库中的column。但是这里有三个特殊一点的字段，分别是：_version_, _root_ 和 id。</p>
-<h3 id="version"><a href="#version" class="headerlink" title="_version_"></a>_version_</h3><p>如果去除此字段，必须同时去掉solrconfig.xml中的update log。_version_ and update log 在SolrCloud中是必须的。作用类似于hibernate中的version字段，用于乐观锁。</p>
-<h3 id="root"><a href="#root" class="headerlink" title="_root_"></a>_root_</h3><p>如果document中内嵌document，此需要此字段。用于内嵌的document指向其父document。</p>
-<h3 id="id"><a href="#id" class="headerlink" title="id"></a>id</h3><p>除非你有很充足的理由，否则不要去除”id”字段。不要改变type属性， 不要对<uniquekey>对应的字段进行索引时分析。</uniquekey></p>
-<h2 id="field元素的属性"><a href="#field元素的属性" class="headerlink" title="field元素的属性"></a>field元素的属性</h2><table>
-<thead>
-<tr>
-<th>属性名称</th>
-<th>默认值</th>
-<th>属性说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>name</td>
-<td></td>
-<td>必填</td>
-</tr>
-<tr>
-<td>type</td>
-<td></td>
-<td>必填，值必须定义在<fieldtype>中</fieldtype></td>
-</tr>
-<tr>
-<td>indexed</td>
-<td>true</td>
-<td>是否进行索引。 true的时候进行索引。</td>
-</tr>
-<tr>
-<td>stored</td>
-<td>true</td>
-<td>是否存储。如果此字段的值需要显示在搜索结果中，则需要进行存储。</td>
-</tr>
-<tr>
-<td>docValues</td>
-<td>fasle</td>
-<td>是否需要存储docValues。true为设置。docValues用于提升sorting, faceting, grouping, function queries等性能，现在仅支持StrField, UUIDFiel和所有的Trie*Field，此值为true的字段要求此字段 multiValued=false，并且 (required=true或设置了default的值)。</td>
-</tr>
-<tr>
-<td>multiValued</td>
-<td>fasle</td>
-<td>是否有多个值。</td>
-</tr>
-<tr>
-<td>omitNorms</td>
-<td></td>
-<td>如果你的大部分的document的长度大小都差不多，则设置成true。如果此字段在索引时需要boost，则设置为false。</td>
-</tr>
-<tr>
-<td>termVectors</td>
-<td>fasle</td>
-<td>设置为true，使More Like This特性生效，会极大的增加索引文件的大小。</td>
-</tr>
-<tr>
-<td>termPositions</td>
-<td>fasle</td>
-<td>通常用于提高高亮搜索结果这一功能的性能。设置为true，会增加索引文件的大小。</td>
-</tr>
-<tr>
-<td>termOffsets</td>
-<td>fasle</td>
-<td>通常用于提高高亮搜索结果这一功能的性能。设置为true，会增加索引文件的大小。</td>
-</tr>
-<tr>
-<td>termPayloads</td>
-<td>fasle</td>
-<td>通常用于提高高亮搜索结果这一功能的性能。设置为true，会增加索引文件的大小。</td>
-</tr>
-<tr>
-<td>required</td>
-<td>fasle</td>
-<td>是否为必填值。 如果设置为true，则索引时，如果此字段值为null，则会报错。如果是字符串，亲测使用””也会报错。</td>
-</tr>
-<tr>
-<td>default</td>
-<td></td>
-<td>这个field的默认值。</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<h1 id="dynamicField元素"><a href="#dynamicField元素" class="headerlink" title="dynamicField元素"></a>dynamicField元素</h1></blockquote>
-<p>动态字段 属性配置上与常规字段没啥区别，最大的区别是name的属性上可以进行通配，比如说name=”*_i”，那么只要是后面带i的字段都是符合的。这样就不怕一些字段无法匹配无法写入。</p>
-<blockquote>
-<h1 id="uniqueKey元素"><a href="#uniqueKey元素" class="headerlink" title="uniqueKey元素"></a>uniqueKey元素</h1></blockquote>
-<p>类似于数据库中的主键。配置文件默认的是<uniquekey>id</uniquekey>。我们在数据库设计时，虽然不强制每个表有主键，但是一般情况下还是会设置一个主键的。同样这个元素也不是必须的，但是强烈建议设置此值。</p>
-<blockquote>
-<h1 id="copyField"><a href="#copyField" class="headerlink" title="copyField"></a>copyField</h1></blockquote>
-<p>假设有这样一个需求：根据书名或者作者名查询图书馆的图书。如果在数据库中，我们可以写成select * from book where author like `%东野圭吾%` or book_name like `%东野圭吾%`。但是在Solr中没有这样的语法。所以，我们需要把author字段和book_name字段拷贝到一个新字段中，通过这个字段来实现上面的需求。写法如下：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">field</span> <span class="attr">name</span>=<span class="string">"text"</span> <span class="attr">type</span>=<span class="string">"string"</span> <span class="attr">index</span>=<span class="string">"true"</span> <span class="attr">stored</span>=<span class="string">"true"</span> <span class="attr">multiValues</span>=<span class="string">"true"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">copyField</span> <span class="attr">source</span>=<span class="string">"author"</span> <span class="attr">dest</span>=<span class="string">"text"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">copyField</span> <span class="attr">source</span>=<span class="string">"book_name"</span> <span class="attr">dest</span>=<span class="string">"text"</span> /&gt;</span></div></pre></td></tr></table></figure>
-<p>这样我们就只需要搜索text里的内容就可以了。</p>
-<p><font color="#DC143C">注意：如果dest由多个source构成，就需要将其指定为multiValued。</font></p>
-<blockquote>
-<h1 id="fieldType"><a href="#fieldType" class="headerlink" title="fieldType"></a>fieldType</h1></blockquote>
-<p>fieldType主要定义了一些字段类型，其name属性值用于前面<field>中的type属性的值。e.g. <fieldtype name="string" class="solr.StrField" sortmissinglast="true"> 其中class属性中”solr”是org.apache.solr.schema这个包名的缩写。</fieldtype></field></p>
-<p>fieldType的属性：</p>
+        <h1 id="什么是反射"><a href="#什么是反射" class="headerlink" title="什么是反射"></a>什么是反射</h1><p>Java程序允许在<strong>运行期间</strong>，检测和修改自身信息，并且可以操作对象的属性和方法。这种<strong>动态</strong>获取类的信息以及动态调用对象的方法的功能来自于Java语言的反射（Reflection）机制。</p>
+<p>Java反射框架主要提供以下功能：</p>
 <ol>
-<li>name  由字母、数字和下划线组成。不能以数字开头。此值用于前面<field>中的type属性的值。</field></li>
-<li>class  此值表明索引并存储此fieldType的数据的类型（e.g 字符类型，数字类型，日期类型…）。如果此类不是solr提供的（自定义的或第三方的类），则不能用”solr.”，需要写类的全路径名。</li>
-<li>positionIncrementGap 值为整数，用于multiValued=”true”的字段，指定多个值之间的距离，以防出现假的短语匹配。<br> 比如描述书本作者的字段是有多个值的，假设有两个作者：John Smith 和 Mike Jackson，我们搜索”Smith Mike”这个作者，如果positionIncrementGap值设成0，则此记录就会被认为是匹配搜索条件的，实际上是不匹配的。对于这种情况，我们应该把此值设置成一个较大的值，比如100。</li>
-<li><p>autoGeneratePhaseQueries 值为布尔类型。默认值为false。设为true时，会自动生成短语查询。<br> 举个粟子：索引中的文本内容为：春花秋月何时了…一江春水向东流。    我们在搜索的输入框里输入”春花”（注意不输入两个双引号），如果autoGeneratePhaseQueries 为true，我们加上highlight的话，返回的匹配结果为： <em>春花</em>春花秋月何时了…一江春水向东流。     如果值为false，则返回结果为<em>春</em><em>花</em>春花秋月何时了…一江<em>春</em>水向东流。</p>
-<p> 如果值为false，我们还是想要进行短语查询，可在输入框里输入”春花”(注意需要加上两个双引号)。</p>
-</li>
-<li><p>docValuesFormat 自定义docValues的格式。设置此值的话，必须在solrconfig.xml里配置schema-aware codec。如：</p>
- <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">codecFactory</span> <span class="attr">class</span>=<span class="string">"solr.SchemaCodecFactory"</span> /&gt;</span></div></pre></td></tr></table></figure>
-<p> 在网上搜了一下，只看到有两个值 Memory 和 Disk。猜想这个属性的作用应该是定义docValues值是存在硬盘上还是存在内存中吧。</p>
-</li>
-<li><p>postingsFormat 自定义PostingsFormat。设置此值的话，必须在solrconfig.xml里配置schema-aware codec。不太清楚具体有什么用。</p>
-<p> 注：尽量不要使用docValuesFormat和postingFormat。Solr的guideline上有一段话，翻译如下：</p>
-<p>仅当使用默认的codec 时，Lucene索引才支持向后兼容。因此，如果使用了这两个属性，那么将来想要升级到更高版本的Solr 时，需要你切换回默认的codec，然后优化现有的索引或者重新建立整个索引。</p>
-</li>
+<li>在运行时判断任意一个对象所属的类；</li>
+<li>在运行时构造任意一个类的对象；</li>
+<li>在运行时判断任意一个类所具有的成员变量和方法；</li>
+<li>在运行时调用任意一个对象的方法，包括private方法；</li>
 </ol>
-<p>以下的属性也同时存在于<field>里，如果<field>里的值会覆盖<fieldtype>里的值。</fieldtype></field></field></p>
-<ol>
-<li>indexed 布尔值。true表示进行索引。</li>
-<li>stored 布尔值。true表示进行存储。</li>
-<li>docValues 布尔值。true表示field的值将会被存储于面向列的数据结构中。</li>
-<li>sortMissingFirst 布尔值。true表示排序的时候，此field值为空的记录排在此field值不为空的记录的前面。</li>
-<li>sortMissingLast 布尔值 。意思和sortMissingFirst相反。</li>
-<li>multiValues 布尔值。</li>
-<li>omitNorms 布尔值。</li>
-<li>omitTermFreqAndPositions 布尔值。忽略term frequency, positions 和 payloads。所有非文本类型字段，此默认值是true。</li>
-<li>omitPositions 布尔值。布尔值。忽略positions。</li>
-<li>termVectors， termPositions， termOffsets 和 termPayloads 布尔值。</li>
-<li>required 布尔值。</li>
-<li>useDocValuesAsStored 布尔值。</li>
+<p>⚠️注意：是在<strong>程序运行时</strong>，而非编译时。</p>
+<p>例如我们有一个类Person，一个类Student extend Person。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Person person = <span class="keyword">new</span> Student()；</div></pre></td></tr></table></figure>
+<p>那么对象person在编译时类型时Person，但是运行时的类型却是Student。</p>
+<h1 id="反射的用途"><a href="#反射的用途" class="headerlink" title="反射的用途"></a>反射的用途</h1><p>反射最重要的用途是开发各种各样的通用框架。例如Spring等，程序需要根据配置文件或者注解，去动态的加载对象，这个时候就需要用到反射了。</p>
+<h1 id="使用反射"><a href="#使用反射" class="headerlink" title="使用反射"></a>使用反射</h1><h2 id="反射的几个重要类"><a href="#反射的几个重要类" class="headerlink" title="反射的几个重要类"></a>反射的几个重要类</h2><ul>
+<li>Field：描述类的域</li>
+<li>Method：描述类的方法</li>
+<li>Constructor：描述类的构造器</li>
+</ul>
+<h2 id="所有的域相关方法-包括获取超类的-："><a href="#所有的域相关方法-包括获取超类的-：" class="headerlink" title="所有的域相关方法(包括获取超类的)："></a>所有的域相关方法(包括获取超类的)：</h2><ul>
+<li>getFields</li>
+<li>getMethods</li>
+<li>getConstructors</li>
+</ul>
+<h2 id="private和protected域-不包含超类-："><a href="#private和protected域-不包含超类-：" class="headerlink" title="private和protected域(不包含超类)："></a>private和protected域(不包含超类)：</h2><ul>
+<li>gettDeclaredFields</li>
+<li>gettDeclaredMethods</li>
+<li><p>gettDeclaredConstructors</p>
+<p>⚠️注意：如果想获取所有域，并且包含超类。只要循环调用Class. getSuperclass()方法，再调用上述获取的所有域的方法即可。当超类为Object时，可以跳出循环，不然会多获得两个成员变量。</p>
+</li>
+</ul>
+<h2 id="加载类"><a href="#加载类" class="headerlink" title="加载类"></a>加载类</h2><p> 加载类有三种方法，最常用的是Object.class。如果使用Class.forName函数，入参必须是完整的路径。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 加载类的3种方法</span></div><div class="line">Class clazz = Class.forName(<span class="string">"com.demo.reflect.Person"</span>);</div><div class="line">Class clazz1 = <span class="keyword">new</span> Person().getClass();</div><div class="line">Class class2 = Person.class;</div></pre></td></tr></table></figure>
+<h2 id="通过构造函数实例化类"><a href="#通过构造函数实例化类" class="headerlink" title="通过构造函数实例化类"></a>通过构造函数实例化类</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Class clazz = Person.class;</div><div class="line">Constructor c = clazz.getDeclaredConstructor(<span class="keyword">new</span> Class[] &#123; String.class &#125;);</div><div class="line"><span class="comment">// 由于构造函数是private的，所以需要屏蔽Java语言的访问检查</span></div><div class="line">c.setAccessible(<span class="keyword">true</span>);</div><div class="line">Person p = (Person) c.newInstance(<span class="keyword">new</span> Object[] &#123; <span class="string">"I'm a reflect name!"</span> &#125;);</div></pre></td></tr></table></figure>
+<h2 id="获取并调用类的无参方法"><a href="#获取并调用类的无参方法" class="headerlink" title="获取并调用类的无参方法"></a>获取并调用类的无参方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Class clazz = Person.class;</div><div class="line">Constructor c = clazz.getConstructor(<span class="keyword">null</span>);</div><div class="line">Person p = (Person) c.newInstance(<span class="keyword">null</span>);</div><div class="line">Method method = clazz.getMethod(<span class="string">"fun"</span>, <span class="keyword">null</span>);</div><div class="line">method.invoke(p, <span class="keyword">null</span>);</div></pre></td></tr></table></figure>
+<h2 id="获取并调用类的含参方法"><a href="#获取并调用类的含参方法" class="headerlink" title="获取并调用类的含参方法"></a>获取并调用类的含参方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Class clazz = Person.class;</div><div class="line">Constructor c = clazz.getConstructor(<span class="keyword">null</span>);</div><div class="line">Person p = (Person) c.newInstance(<span class="keyword">null</span>);</div><div class="line">Method method = clazz.getMethod(<span class="string">"fun"</span>, <span class="keyword">new</span> Class[] &#123; String.class &#125;);</div><div class="line">method.invoke(p, <span class="keyword">new</span> Object[] &#123; <span class="string">"I'm a reflect method!"</span> &#125;);</div></pre></td></tr></table></figure>
+<h2 id="获取类的字段"><a href="#获取类的字段" class="headerlink" title="获取类的字段"></a>获取类的字段</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">Class clazz = Person.class;</div><div class="line">Constructor c = clazz.getDeclaredConstructor(<span class="keyword">new</span> Class[] &#123; String.class &#125;);</div><div class="line"><span class="comment">// 由于构造函数是 private 的，所以需要获取控制权限</span></div><div class="line">c.setAccessible(<span class="keyword">true</span>);</div><div class="line">Person p = (Person) c.newInstance(<span class="keyword">new</span> Object[] &#123; <span class="string">"I'm a reflect name!"</span> &#125;);</div><div class="line">Field f = clazz.getField(<span class="string">"name"</span>);</div><div class="line">Object value = f.get(p);</div><div class="line">Class type = f.getType();</div><div class="line">System.out.println(type);</div><div class="line"><span class="keyword">if</span> (type.equals(String.class)) &#123;</div><div class="line">    System.out.println((String) value);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="使用反射的注意点"><a href="#使用反射的注意点" class="headerlink" title="使用反射的注意点"></a>使用反射的注意点</h1><ol>
+<li>利用反射机制，开发者可以跨过权限的限制，一定程度上会影响封装性和安全。</li>
+<li>反射会额外消耗一定的系统资源，如果大量使用，并不做任何缓存，会导致性能问题。可以参照对比apache和Spring的BeanCopy。</li>
+<li>如果不需要动态的创建对象，那还是别用反射了。</li>
 </ol>
 
       
@@ -550,7 +456,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Solr/" rel="tag"># Solr</a>
+            <a href="/tags/Java/" rel="tag"># Java</a>
           
         </div>
       
@@ -563,8 +469,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/04/Solr学习-为Solr添加数据/" rel="next" title="Solr学习:为Solr添加数据">
-                <i class="fa fa-chevron-left"></i> Solr学习:为Solr添加数据
+              <a href="/2017/04/12/转-Solr文本分析/" rel="next" title="转:Solr文本分析">
+                <i class="fa fa-chevron-left"></i> 转:Solr文本分析
               </a>
             
           </div>
@@ -573,8 +479,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/03/10/Solr学习-SolrJ-操作Solr的API/" rel="prev" title="Solr学习:SolrJ-操作Solr的API">
-                Solr学习:SolrJ-操作Solr的API <i class="fa fa-chevron-right"></i>
+              <a href="/2017/04/23/Java注解(Annotation)入门/" rel="prev" title="Java注解(Annotation)入门">
+                Java注解(Annotation)入门 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -711,7 +617,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#field元素"><span class="nav-number">2.</span> <span class="nav-text">field元素</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#特殊之处"><span class="nav-number">2.1.</span> <span class="nav-text">特殊之处</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#version"><span class="nav-number">2.1.1.</span> <span class="nav-text">_version_</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#root"><span class="nav-number">2.1.2.</span> <span class="nav-text">_root_</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#id"><span class="nav-number">2.1.3.</span> <span class="nav-text">id</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#field元素的属性"><span class="nav-number">2.2.</span> <span class="nav-text">field元素的属性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dynamicField元素"><span class="nav-number">3.</span> <span class="nav-text">dynamicField元素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#uniqueKey元素"><span class="nav-number">4.</span> <span class="nav-text">uniqueKey元素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#copyField"><span class="nav-number">5.</span> <span class="nav-text">copyField</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#fieldType"><span class="nav-number">6.</span> <span class="nav-text">fieldType</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是反射"><span class="nav-number">1.</span> <span class="nav-text">什么是反射</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#反射的用途"><span class="nav-number">2.</span> <span class="nav-text">反射的用途</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用反射"><span class="nav-number">3.</span> <span class="nav-text">使用反射</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#反射的几个重要类"><span class="nav-number">3.1.</span> <span class="nav-text">反射的几个重要类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#所有的域相关方法-包括获取超类的-："><span class="nav-number">3.2.</span> <span class="nav-text">所有的域相关方法(包括获取超类的)：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#private和protected域-不包含超类-："><span class="nav-number">3.3.</span> <span class="nav-text">private和protected域(不包含超类)：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载类"><span class="nav-number">3.4.</span> <span class="nav-text">加载类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过构造函数实例化类"><span class="nav-number">3.5.</span> <span class="nav-text">通过构造函数实例化类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取并调用类的无参方法"><span class="nav-number">3.6.</span> <span class="nav-text">获取并调用类的无参方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取并调用类的含参方法"><span class="nav-number">3.7.</span> <span class="nav-text">获取并调用类的含参方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取类的字段"><span class="nav-number">3.8.</span> <span class="nav-text">获取类的字段</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用反射的注意点"><span class="nav-number">4.</span> <span class="nav-text">使用反射的注意点</span></a></li></ol></div>
             
 
           </div>
