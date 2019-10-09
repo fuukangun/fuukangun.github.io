@@ -2,6 +2,41 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2017/03/10/Solr%E5%AD%A6%E4%B9%A0-SolrJ-%E6%93%8D%E4%BD%9CSolr%E7%9A%84API/</loc>
+    
+    <lastmod>2019-10-09T15:10:30.624Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/02/24/Solr%E5%AD%A6%E4%B9%A0-Solr5-5-0%E6%90%AD%E5%BB%BA/</loc>
+    
+    <lastmod>2019-10-09T15:10:10.111Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/02/25/Solr%E5%AD%A6%E4%B9%A0-Core%E9%85%8D%E7%BD%AE/</loc>
+    
+    <lastmod>2019-10-09T15:09:44.489Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/03/04/Solr%E5%AD%A6%E4%B9%A0-%E4%B8%BASolr%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE/</loc>
+    
+    <lastmod>2019-10-09T15:09:28.445Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/04/12/%E8%BD%AC-Solr%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/</loc>
+    
+    <lastmod>2019-10-09T15:08:22.328Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2017/04/23/Java%E6%B3%A8%E8%A7%A3(Annotation)%E5%85%A5%E9%97%A8/</loc>
     
     <lastmod>2017-07-07T16:28:19.000Z</lastmod>
@@ -16,44 +51,9 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2017/04/12/%E8%BD%AC-Solr%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/</loc>
-    
-    <lastmod>2017-05-31T15:25:24.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2017/03/04/Solr%E5%AD%A6%E4%B9%A0-%E4%B8%BASolr%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE/</loc>
-    
-    <lastmod>2017-03-29T15:44:41.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2017/03/10/Solr%E5%AD%A6%E4%B9%A0-SolrJ-%E6%93%8D%E4%BD%9CSolr%E7%9A%84API/</loc>
-    
-    <lastmod>2017-03-10T17:09:01.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://yoursite.com/2017/03/09/Solr%E5%AD%A6%E4%B9%A0-managed-schema%E8%AF%A6%E8%A7%A3/</loc>
     
     <lastmod>2017-03-10T15:52:31.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2017/02/24/Solr%E5%AD%A6%E4%B9%A0-Solr5-5-0%E6%90%AD%E5%BB%BA/</loc>
-    
-    <lastmod>2017-03-03T16:38:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2017/02/25/Solr%E5%AD%A6%E4%B9%A0-Core%E9%85%8D%E7%BD%AE/</loc>
-    
-    <lastmod>2017-02-25T16:24:56.000Z</lastmod>
     
   </url>
   

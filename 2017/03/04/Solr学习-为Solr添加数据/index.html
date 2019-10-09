@@ -93,20 +93,20 @@
 <meta property="og:url" content="http://yoursite.com/2017/03/04/Solr学习-为Solr添加数据/index.html">
 <meta property="og:site_name" content="fuukangun">
 <meta property="og:description" content="作为一个搜索引擎，没数据搜什么？所以本文讲述如何为自己搭建Solr添加数据。">
-<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/schema.png">
-<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/documentsAdd.png">
-<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/query.png">
-<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/resultSolr.png">
-<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/urlResult.png">
-<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/fixResult.png">
-<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/mysqlData.png">
-<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/dataImport.png">
-<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/queryMySQL.png">
-<meta property="og:updated_time" content="2017-03-29T15:44:41.000Z">
+<meta property="og:image" content="http://pic.guanjun.fun/image/schema.png">
+<meta property="og:image" content="http://pic.guanjun.fun/image/documentsAdd.png">
+<meta property="og:image" content="http://pic.guanjun.fun/image/query.png">
+<meta property="og:image" content="http://pic.guanjun.fun/image/resultSolr.png">
+<meta property="og:image" content="http://pic.guanjun.fun/image/urlResult.png">
+<meta property="og:image" content="http://pic.guanjun.fun/image/fixResult.png">
+<meta property="og:image" content="http://pic.guanjun.fun/image/mysqlData.png">
+<meta property="og:image" content="http://pic.guanjun.fun/image/dataImport.png">
+<meta property="og:image" content="http://pic.guanjun.fun/image/queryMySQL.png">
+<meta property="og:updated_time" content="2019-10-09T15:09:28.445Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Solr学习:为Solr添加数据">
 <meta name="twitter:description" content="作为一个搜索引擎，没数据搜什么？所以本文讲述如何为自己搭建Solr添加数据。">
-<meta name="twitter:image" content="https://olwqv7o0u.qnssl.com/image/schema.png">
+<meta name="twitter:image" content="http://pic.guanjun.fun/image/schema.png">
 
 
 
@@ -404,11 +404,11 @@
       
         <blockquote>
 <h1 id="schema配置简介"><a href="#schema配置简介" class="headerlink" title="schema配置简介"></a>schema配置简介</h1></blockquote>
-<p>为什么此处只做一个简介，而不是放一篇详解上来？因为本文主要讲解如何为Solr添加数据，对于schema配置的详解，不是重点。想要了解清楚的各位，可以自行查询，网上很多关于schema的详解。或者也可以直接参看相关的官方wiki：<a href="https://wiki.apache.org/solr/SchemaXml" target="_blank" rel="external">链接直达</a></p>
+<p>为什么此处只做一个简介，而不是放一篇详解上来？因为本文主要讲解如何为Solr添加数据，对于schema配置的详解，不是重点。想要了解清楚的各位，可以自行查询，网上很多关于schema的详解。或者也可以直接参看相关的官方wiki：<a href="hhttp://pic.guanjun.fun/ttps://wiki.apache.org/solr/SchemaXml" target="_blank" rel="external">链接直达</a></p>
 <ol>
 <li>把Solr的一个Core当作数据库的一张表，那么其schema就相当于这个表的表结构设计。（本人刚刚接触Solr，如果表述有误，欢迎指正）也就是说，在添加数据之前，我们得先设计好表结构。</li>
 <li>那么，schema的配置文件在哪呢？其实就在solr_home/solr/fuukangun（此处是你的Core name）/conf下找到managed-schema（之前的版本是schema.xml文件）。</li>
-<li>打开managed-schema文件，我们可以看到里面默认配置了很多filed，也就是说默认了很多字段。你可以将里面的filed全删除，配上你想要的字段。但是值得注意的是，类似_version_和_root_这种带下划线的字段，是系统保留字段，可以不删除，但建议你的数据库中，表字段不要类似命名。<img src="https://olwqv7o0u.qnssl.com/image/schema.png" alt="managed-schema"></li>
+<li>打开managed-schema文件，我们可以看到里面默认配置了很多filed，也就是说默认了很多字段。你可以将里面的filed全删除，配上你想要的字段。但是值得注意的是，类似_version_和_root_这种带下划线的字段，是系统保留字段，可以不删除，但建议你的数据库中，表字段不要类似命名。<img src="http://pic.guanjun.fun/image/schema.png" alt="managed-schema"></li>
 <li><p>由于已经有默认配置了，那么我在这里就直接用原本自带的部分字段好了。这里选用id，sku，name三个字段，将其他的field注释或删除。看这几个field名称，应该是用来存储商品信息的。</p>
  <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">field</span> <span class="attr">name</span>=<span class="string">"id"</span> <span class="attr">type</span>=<span class="string">"string"</span> <span class="attr">indexed</span>=<span class="string">"true"</span> <span class="attr">stored</span>=<span class="string">"true"</span> <span class="attr">required</span>=<span class="string">"true"</span> <span class="attr">multiValued</span>=<span class="string">"false"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">field</span> <span class="attr">name</span>=<span class="string">"sku"</span> <span class="attr">type</span>=<span class="string">"string"</span> <span class="attr">indexed</span>=<span class="string">"true"</span> <span class="attr">stored</span>=<span class="string">"true"</span> <span class="attr">omitNorms</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">field</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">type</span>=<span class="string">"string"</span> <span class="attr">indexed</span>=<span class="string">"true"</span> <span class="attr">stored</span>=<span class="string">"true"</span>/&gt;</span></div></pre></td></tr></table></figure>
 </li>
@@ -416,26 +416,26 @@
 <blockquote>
 <h1 id="在Solr控制台添加数据"><a href="#在Solr控制台添加数据" class="headerlink" title="在Solr控制台添加数据"></a>在Solr控制台添加数据</h1></blockquote>
 <ol>
-<li>在Solr控制台选择核心以后，点击下方的Documents按钮。Solr上一条数据可以看成是一个Document。<img src="https://olwqv7o0u.qnssl.com/image/documentsAdd.png" alt="Documents"></li>
+<li>在Solr控制台选择核心以后，点击下方的Documents按钮。Solr上一条数据可以看成是一个Document。<img src="http://pic.guanjun.fun/image/documentsAdd.png" alt="Documents"></li>
 <li>Document Type可以选择很多，我在这里选择了JSON。然后在下面填入JSON格式的数据，点击Submit Document。右下角显示Status: success就表示数据添加成功了。我们也可以在这里添加一个数组的对象，不一定要一个个添加。</li>
 </ol>
 <blockquote>
 <h1 id="进行数据查询"><a href="#进行数据查询" class="headerlink" title="进行数据查询"></a>进行数据查询</h1></blockquote>
-<p>选择左边菜单栏里面的Query，点击最下面的Execute Query按钮就会在右边出现查询结果了。上面的q输入框内，就是输入查询条件的，*:*就是检索所有条件的。比如我们这个索引只有三个字段：id，sku，name。我们根据name模糊查询的话，可以写成name:雀巢*。*的作用，类似于MySQL中的%。当然，我们也可以精确查询。另外一些设置这里不在简述。<br><img src="https://olwqv7o0u.qnssl.com/image/query.png" alt=""></p>
+<p>选择左边菜单栏里面的Query，点击最下面的Execute Query按钮就会在右边出现查询结果了。上面的q输入框内，就是输入查询条件的，*:*就是检索所有条件的。比如我们这个索引只有三个字段：id，sku，name。我们根据name模糊查询的话，可以写成name:雀巢*。*的作用，类似于MySQL中的%。当然，我们也可以精确查询。另外一些设置这里不在简述。<br><img src="http://pic.guanjun.fun/image/query.png" alt=""></p>
 <font color="#DC143C">1. 问题出现</font>
 
-<p>但是，在点击了Execute Query按钮之后，界面上并没有出现任何数据。于是通过调试，我在控制台发现了服务器400的错误。<br><img src="https://olwqv7o0u.qnssl.com/image/resultSolr.png" alt=""><br>个人怀疑是Tomcat上解析URL出错了，我把URL复制下来，粘贴到浏览器的地址栏，把%2F修改为/。结果成功获得了刚刚添加过的数据。<br><img src="https://olwqv7o0u.qnssl.com/image/urlResult.png" alt=""></p>
+<p>但是，在点击了Execute Query按钮之后，界面上并没有出现任何数据。于是通过调试，我在控制台发现了服务器400的错误。<br><img src="http://pic.guanjun.fun/image/resultSolr.png" alt=""><br>个人怀疑是Tomcat上解析URL出错了，我把URL复制下来，粘贴到浏览器的地址栏，把%2F修改为/。结果成功获得了刚刚添加过的数据。<br><img src="http://pic.guanjun.fun/image/urlResult.png" alt=""></p>
 <font color="#DC143C">2. 解决方式</font>
 
 <p>找到Tomcat/conf目录下的catalina.properties文件，在最下面添加如下代码：org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true<br>重启Tomcat，就能使Tomcat正确解析出URL了。</p>
 <font color="#DC143C">3. 结果查看</font>
 
-<p>然后我们再进一次Solr控制台，就能看到搜索结果了。<img src="https://olwqv7o0u.qnssl.com/image/fixResult.png" alt=""></p>
+<p>然后我们再进一次Solr控制台，就能看到搜索结果了。<img src="http://pic.guanjun.fun/image/fixResult.png" alt=""></p>
 <blockquote>
 <h1 id="从MySQL导入数据到Solr"><a href="#从MySQL导入数据到Solr" class="headerlink" title="从MySQL导入数据到Solr"></a>从MySQL导入数据到Solr</h1></blockquote>
 <p>解决了上面的问题，我们继续来尝试一下如何从数据库导入数据到Solr。</p>
 <ol>
-<li>首先在数据库建立相同格式的表，并在表里加几条数据。<br><img src="https://olwqv7o0u.qnssl.com/image/mysqlData.png" alt=""></li>
+<li>首先在数据库建立相同格式的表，并在表里加几条数据。<br><img src="http://pic.guanjun.fun/image/mysqlData.png" alt=""></li>
 <li><p>要想Solr连接数据库，需要两个jar包：</p>
 <ul>
 <li>mysql-connector-java-5.1.41-bin.jar（这个不需要多说，没有的可以自行下载）</li>
@@ -456,11 +456,11 @@
 </li>
 </ul>
 </li>
-<li><p>重启Tomcat，在Solr控制台，选择Dataimport，点击Execute从MySQL导入数据。可能需要稍微等几秒，点击Refresh Status刷新倒入状态，出现下图，表示数据导入成功。<br><img src="https://olwqv7o0u.qnssl.com/image/dataImport.png" alt=""></p>
+<li><p>重启Tomcat，在Solr控制台，选择Dataimport，点击Execute从MySQL导入数据。可能需要稍微等几秒，点击Refresh Status刷新倒入状态，出现下图，表示数据导入成功。<br><img src="http://pic.guanjun.fun/image/dataImport.png" alt=""></p>
 </li>
 <li>点击Query查询数据</li>
 </ol>
-<p>但是原本我们通过控制台添加的数据消失了，这是因为我们在上一步点击Execute导入数据时，勾选了clean的缘故。<br><img src="https://olwqv7o0u.qnssl.com/image/queryMySQL.png" alt=""></p>
+<p>但是原本我们通过控制台添加的数据消失了，这是因为我们在上一步点击Execute导入数据时，勾选了clean的缘故。<br><img src="http://pic.guanjun.fun/image/queryMySQL.png" alt=""></p>
 
       
     </div>
@@ -665,8 +665,8 @@
       <div class="footer-inner">
         <div class="copyright" >
   
-  &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

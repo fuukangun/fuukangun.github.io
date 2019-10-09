@@ -156,7 +156,7 @@
     <link href="http://yoursite.com/2017/04/12/%E8%BD%AC-Solr%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/"/>
     <id>http://yoursite.com/2017/04/12/转-Solr文本分析/</id>
     <published>2017-04-12T13:51:22.000Z</published>
-    <updated>2017-05-31T15:25:24.000Z</updated>
+    <updated>2019-10-09T15:08:22.328Z</updated>
     
     <content type="html"><![CDATA[<p>本文转自周金根的博客<a href="http://www.cnblogs.com/zhoujg/archive/2015/12/18/5054122.html" target="_blank" rel="external">http://www.cnblogs.com/zhoujg/archive/2015/12/18/5054122.html</a></p>
 <h1 id="Solr：文本分析"><a href="#Solr：文本分析" class="headerlink" title="Solr：文本分析"></a>Solr：文本分析</h1><p>文本分析是搜索引擎的核心工作之一，对文本包含许多处理步骤，比如：分词、大写转小写、词干化、同义词转化等。简单的说，文本分析就说将一个文本字段的值转为一个一个的token，然后被保存到Lucene的索引结构中被将来搜索用。当然，文本分析不仅在建立索引时有用，在查询时对对所输入的查询串也一样可以进行文本分析。在 Solr Schema设计 中我们介绍了许多Solr中的字段类型，其中最重要的是solr.TextField，这个类型可以进行分析器配置来进行文本分析。</p>
@@ -171,8 +171,8 @@
 <p>Type属性可以指定为index或是query值，分别表示是索引时用的分析器，和查询时所用的分析器。如果在索引和查询时使用相同的分析器，你可以不指定type属性值。</p>
 <p>分析器的配置中可以选用一个或多个字符过滤器（character filter），字符过滤器是对原始文本进行字符流级别的操作。它通常可以用于大小写转化，去除字母上标等等。在字符过滤器之后是分词器（Tokenizer），它是必须要配置的。分析器会使用分词器将字符流切分成词元（Token）系列，通常用在空格处切分这种简单的算法。后面的步骤是可选的，比如token过滤器（Token Filter）会对token进行许多种操作，最后产生的词元会被称为词（Term），即用于Lucene实际索引和查询的单位。</p>
 <p>最后，我有必须对autoGeneratePhraseQueries布尔属性补充两句，这个属性只能用于文本域。如果在查询文本分析时产生了多个词元，比如Wi-Fi分词为Wi和Fi，那么默认情况下它们只是两个不同的搜索词，它们没有位置上的关系。但如果autoGeneratePhraseQueries被设置，那么这两个词元就构造了一个词组查询，即“WiFi”，所以索引中“WiFi”必须相邻才能被查询到。在新Solr版本中，默认它被设置为false。我不建议使用它。</p>
-<h1 id="在Admin上对字段进行分析"><a href="#在Admin上对字段进行分析" class="headerlink" title="在Admin上对字段进行分析"></a>在Admin上对字段进行分析</h1><p>在我们深入特定分析组件的细节之前，有必要去熟悉Solr的分析页面，它是一个很好的实验和查错工具，绝对不容错过。你将会用它来验证不同的分析配置，来找到你最想要的效果，你还可以用它来找到你认为应该会匹配的查询为什么没有匹配。在Solr的管理页面，你可以看到一个名为[Analysis]的链接，你进入后，会看到下面的界面。<br><img src="https://olwqv7o0u.qnssl.com/image/1.jpg" alt="pic1"><br>界面上的第一个选项是必选的，你可选择直接通过字段类型名称来选择类型，你也可以间接地通过一个字段的名字来选择自端类型。在上面的示例中，我选择了title字段</p>
-<p>通过Schema Browser可以看到这个字段类型是 text_general<br><img src="https://olwqv7o0u.qnssl.com/image/2.jpg" alt="pic2"><br>点击灰色的 text_general，可以看到这个字段的分析器中定义的分词器和过滤器<br><img src="https://olwqv7o0u.qnssl.com/image/3.jpg" alt="pic3"><br>接下来，你可以分析索引或是查询文本，也可以两者同时分析。你需要输入些文本到文本框中以进行分析。将字段值放到Index文本框中，将查询文本放入Query文本框中，点击Analyze按钮看到一下文本处理结果，因为还没有中文处理，所以中文都被一个字一个字的分开处理了。<br><img src="https://olwqv7o0u.qnssl.com/image/4.jpg" alt="pic4"></p>
+<h1 id="在Admin上对字段进行分析"><a href="#在Admin上对字段进行分析" class="headerlink" title="在Admin上对字段进行分析"></a>在Admin上对字段进行分析</h1><p>在我们深入特定分析组件的细节之前，有必要去熟悉Solr的分析页面，它是一个很好的实验和查错工具，绝对不容错过。你将会用它来验证不同的分析配置，来找到你最想要的效果，你还可以用它来找到你认为应该会匹配的查询为什么没有匹配。在Solr的管理页面，你可以看到一个名为[Analysis]的链接，你进入后，会看到下面的界面。<br><img src="http://pic.guanjun.fun/image/1.jpg" alt="pic1"><br>界面上的第一个选项是必选的，你可选择直接通过字段类型名称来选择类型，你也可以间接地通过一个字段的名字来选择自端类型。在上面的示例中，我选择了title字段</p>
+<p>通过Schema Browser可以看到这个字段类型是 text_general<br><img src="http://pic.guanjun.fun/image/2.jpg" alt="pic2"><br>点击灰色的 text_general，可以看到这个字段的分析器中定义的分词器和过滤器<br><img src="http://pic.guanjun.fun/image/3.jpg" alt="pic3"><br>接下来，你可以分析索引或是查询文本，也可以两者同时分析。你需要输入些文本到文本框中以进行分析。将字段值放到Index文本框中，将查询文本放入Query文本框中，点击Analyze按钮看到一下文本处理结果，因为还没有中文处理，所以中文都被一个字一个字的分开处理了。<br><img src="http://pic.guanjun.fun/image/4.jpg" alt="pic4"></p>
 <p>你可以选中verbose output来查看处理的详细信息，我希望你能自己试一下。</p>
 <p>上图中每一行表示分析器处理链上的每一步的处理结果。比如第三个分析组件是LowerCaseFilter，它的处理结果就在第三行。前面的ST/SF/LCF应该是分词器和过滤器的简称。</p>
 <p>下面我们接着来详细看看有哪些分词器和过滤器吧。</p>
@@ -345,7 +345,7 @@
     <link href="http://yoursite.com/2017/03/10/Solr%E5%AD%A6%E4%B9%A0-SolrJ-%E6%93%8D%E4%BD%9CSolr%E7%9A%84API/"/>
     <id>http://yoursite.com/2017/03/10/Solr学习-SolrJ-操作Solr的API/</id>
     <published>2017-03-10T15:57:34.000Z</published>
-    <updated>2017-03-10T17:09:01.000Z</updated>
+    <updated>2019-10-09T15:10:30.624Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <h1 id="SolrJ的概念"><a href="#SolrJ的概念" class="headerlink" title="SolrJ的概念"></a>SolrJ的概念</h1></blockquote>
@@ -544,15 +544,15 @@
     <link href="http://yoursite.com/2017/03/04/Solr%E5%AD%A6%E4%B9%A0-%E4%B8%BASolr%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE/"/>
     <id>http://yoursite.com/2017/03/04/Solr学习-为Solr添加数据/</id>
     <published>2017-03-04T14:48:57.000Z</published>
-    <updated>2017-03-29T15:44:41.000Z</updated>
+    <updated>2019-10-09T15:09:28.445Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <h1 id="schema配置简介"><a href="#schema配置简介" class="headerlink" title="schema配置简介"></a>schema配置简介</h1></blockquote>
-<p>为什么此处只做一个简介，而不是放一篇详解上来？因为本文主要讲解如何为Solr添加数据，对于schema配置的详解，不是重点。想要了解清楚的各位，可以自行查询，网上很多关于schema的详解。或者也可以直接参看相关的官方wiki：<a href="https://wiki.apache.org/solr/SchemaXml" target="_blank" rel="external">链接直达</a></p>
+<p>为什么此处只做一个简介，而不是放一篇详解上来？因为本文主要讲解如何为Solr添加数据，对于schema配置的详解，不是重点。想要了解清楚的各位，可以自行查询，网上很多关于schema的详解。或者也可以直接参看相关的官方wiki：<a href="hhttp://pic.guanjun.fun/ttps://wiki.apache.org/solr/SchemaXml" target="_blank" rel="external">链接直达</a></p>
 <ol>
 <li>把Solr的一个Core当作数据库的一张表，那么其schema就相当于这个表的表结构设计。（本人刚刚接触Solr，如果表述有误，欢迎指正）也就是说，在添加数据之前，我们得先设计好表结构。</li>
 <li>那么，schema的配置文件在哪呢？其实就在solr_home/solr/fuukangun（此处是你的Core name）/conf下找到managed-schema（之前的版本是schema.xml文件）。</li>
-<li>打开managed-schema文件，我们可以看到里面默认配置了很多filed，也就是说默认了很多字段。你可以将里面的filed全删除，配上你想要的字段。但是值得注意的是，类似_version_和_root_这种带下划线的字段，是系统保留字段，可以不删除，但建议你的数据库中，表字段不要类似命名。<img src="https://olwqv7o0u.qnssl.com/image/schema.png" alt="managed-schema"></li>
+<li>打开managed-schema文件，我们可以看到里面默认配置了很多filed，也就是说默认了很多字段。你可以将里面的filed全删除，配上你想要的字段。但是值得注意的是，类似_version_和_root_这种带下划线的字段，是系统保留字段，可以不删除，但建议你的数据库中，表字段不要类似命名。<img src="http://pic.guanjun.fun/image/schema.png" alt="managed-schema"></li>
 <li><p>由于已经有默认配置了，那么我在这里就直接用原本自带的部分字段好了。这里选用id，sku，name三个字段，将其他的field注释或删除。看这几个field名称，应该是用来存储商品信息的。</p>
  <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">field</span> <span class="attr">name</span>=<span class="string">"id"</span> <span class="attr">type</span>=<span class="string">"string"</span> <span class="attr">indexed</span>=<span class="string">"true"</span> <span class="attr">stored</span>=<span class="string">"true"</span> <span class="attr">required</span>=<span class="string">"true"</span> <span class="attr">multiValued</span>=<span class="string">"false"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">field</span> <span class="attr">name</span>=<span class="string">"sku"</span> <span class="attr">type</span>=<span class="string">"string"</span> <span class="attr">indexed</span>=<span class="string">"true"</span> <span class="attr">stored</span>=<span class="string">"true"</span> <span class="attr">omitNorms</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">field</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">type</span>=<span class="string">"string"</span> <span class="attr">indexed</span>=<span class="string">"true"</span> <span class="attr">stored</span>=<span class="string">"true"</span>/&gt;</span></div></pre></td></tr></table></figure>
 </li>
@@ -560,26 +560,26 @@
 <blockquote>
 <h1 id="在Solr控制台添加数据"><a href="#在Solr控制台添加数据" class="headerlink" title="在Solr控制台添加数据"></a>在Solr控制台添加数据</h1></blockquote>
 <ol>
-<li>在Solr控制台选择核心以后，点击下方的Documents按钮。Solr上一条数据可以看成是一个Document。<img src="https://olwqv7o0u.qnssl.com/image/documentsAdd.png" alt="Documents"></li>
+<li>在Solr控制台选择核心以后，点击下方的Documents按钮。Solr上一条数据可以看成是一个Document。<img src="http://pic.guanjun.fun/image/documentsAdd.png" alt="Documents"></li>
 <li>Document Type可以选择很多，我在这里选择了JSON。然后在下面填入JSON格式的数据，点击Submit Document。右下角显示Status: success就表示数据添加成功了。我们也可以在这里添加一个数组的对象，不一定要一个个添加。</li>
 </ol>
 <blockquote>
 <h1 id="进行数据查询"><a href="#进行数据查询" class="headerlink" title="进行数据查询"></a>进行数据查询</h1></blockquote>
-<p>选择左边菜单栏里面的Query，点击最下面的Execute Query按钮就会在右边出现查询结果了。上面的q输入框内，就是输入查询条件的，*:*就是检索所有条件的。比如我们这个索引只有三个字段：id，sku，name。我们根据name模糊查询的话，可以写成name:雀巢*。*的作用，类似于MySQL中的%。当然，我们也可以精确查询。另外一些设置这里不在简述。<br><img src="https://olwqv7o0u.qnssl.com/image/query.png" alt=""></p>
+<p>选择左边菜单栏里面的Query，点击最下面的Execute Query按钮就会在右边出现查询结果了。上面的q输入框内，就是输入查询条件的，*:*就是检索所有条件的。比如我们这个索引只有三个字段：id，sku，name。我们根据name模糊查询的话，可以写成name:雀巢*。*的作用，类似于MySQL中的%。当然，我们也可以精确查询。另外一些设置这里不在简述。<br><img src="http://pic.guanjun.fun/image/query.png" alt=""></p>
 <font color="#DC143C">1. 问题出现</font>
 
-<p>但是，在点击了Execute Query按钮之后，界面上并没有出现任何数据。于是通过调试，我在控制台发现了服务器400的错误。<br><img src="https://olwqv7o0u.qnssl.com/image/resultSolr.png" alt=""><br>个人怀疑是Tomcat上解析URL出错了，我把URL复制下来，粘贴到浏览器的地址栏，把%2F修改为/。结果成功获得了刚刚添加过的数据。<br><img src="https://olwqv7o0u.qnssl.com/image/urlResult.png" alt=""></p>
+<p>但是，在点击了Execute Query按钮之后，界面上并没有出现任何数据。于是通过调试，我在控制台发现了服务器400的错误。<br><img src="http://pic.guanjun.fun/image/resultSolr.png" alt=""><br>个人怀疑是Tomcat上解析URL出错了，我把URL复制下来，粘贴到浏览器的地址栏，把%2F修改为/。结果成功获得了刚刚添加过的数据。<br><img src="http://pic.guanjun.fun/image/urlResult.png" alt=""></p>
 <font color="#DC143C">2. 解决方式</font>
 
 <p>找到Tomcat/conf目录下的catalina.properties文件，在最下面添加如下代码：org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true<br>重启Tomcat，就能使Tomcat正确解析出URL了。</p>
 <font color="#DC143C">3. 结果查看</font>
 
-<p>然后我们再进一次Solr控制台，就能看到搜索结果了。<img src="https://olwqv7o0u.qnssl.com/image/fixResult.png" alt=""></p>
+<p>然后我们再进一次Solr控制台，就能看到搜索结果了。<img src="http://pic.guanjun.fun/image/fixResult.png" alt=""></p>
 <blockquote>
 <h1 id="从MySQL导入数据到Solr"><a href="#从MySQL导入数据到Solr" class="headerlink" title="从MySQL导入数据到Solr"></a>从MySQL导入数据到Solr</h1></blockquote>
 <p>解决了上面的问题，我们继续来尝试一下如何从数据库导入数据到Solr。</p>
 <ol>
-<li>首先在数据库建立相同格式的表，并在表里加几条数据。<br><img src="https://olwqv7o0u.qnssl.com/image/mysqlData.png" alt=""></li>
+<li>首先在数据库建立相同格式的表，并在表里加几条数据。<br><img src="http://pic.guanjun.fun/image/mysqlData.png" alt=""></li>
 <li><p>要想Solr连接数据库，需要两个jar包：</p>
 <ul>
 <li>mysql-connector-java-5.1.41-bin.jar（这个不需要多说，没有的可以自行下载）</li>
@@ -600,11 +600,11 @@
 </li>
 </ul>
 </li>
-<li><p>重启Tomcat，在Solr控制台，选择Dataimport，点击Execute从MySQL导入数据。可能需要稍微等几秒，点击Refresh Status刷新倒入状态，出现下图，表示数据导入成功。<br><img src="https://olwqv7o0u.qnssl.com/image/dataImport.png" alt=""></p>
+<li><p>重启Tomcat，在Solr控制台，选择Dataimport，点击Execute从MySQL导入数据。可能需要稍微等几秒，点击Refresh Status刷新倒入状态，出现下图，表示数据导入成功。<br><img src="http://pic.guanjun.fun/image/dataImport.png" alt=""></p>
 </li>
 <li>点击Query查询数据</li>
 </ol>
-<p>但是原本我们通过控制台添加的数据消失了，这是因为我们在上一步点击Execute导入数据时，勾选了clean的缘故。<br><img src="https://olwqv7o0u.qnssl.com/image/queryMySQL.png" alt=""></p>
+<p>但是原本我们通过控制台添加的数据消失了，这是因为我们在上一步点击Execute导入数据时，勾选了clean的缘故。<br><img src="http://pic.guanjun.fun/image/queryMySQL.png" alt=""></p>
 ]]></content>
     
     <summary type="html">
@@ -625,11 +625,11 @@
     <link href="http://yoursite.com/2017/02/25/Solr%E5%AD%A6%E4%B9%A0-Core%E9%85%8D%E7%BD%AE/"/>
     <id>http://yoursite.com/2017/02/25/Solr学习-Core配置/</id>
     <published>2017-02-25T13:58:00.000Z</published>
-    <updated>2017-02-25T16:24:56.000Z</updated>
+    <updated>2019-10-09T15:09:44.489Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1></blockquote>
-<p>上回说到，如何搭建Solr5.5.0，进入Solr控制台。但是，可以看到，此时控制台左边Core选择栏，显示的是<font color="#DC143C">No cores available</font>。也就是说，Solr从5.X开始就不提供默认的Core了，而需要我们自行配置。本文就讲述如何配置第一个Core。<br><img src="https://olwqv7o0u.qnssl.com/image/Solr-index.png" alt="没有Core的Solr控制台"></p>
+<p>上回说到，如何搭建Solr5.5.0，进入Solr控制台。但是，可以看到，此时控制台左边Core选择栏，显示的是<font color="#DC143C">No cores available</font>。也就是说，Solr从5.X开始就不提供默认的Core了，而需要我们自行配置。本文就讲述如何配置第一个Core。<br><img src="http://pic.guanjun.fun/image/Solr-index.png" alt="没有Core的Solr控制台"></p>
 <blockquote>
 <h1 id="配置年轻人的第一个Core"><a href="#配置年轻人的第一个Core" class="headerlink" title="配置年轻人的第一个Core"></a>配置年轻人的第一个Core</h1></blockquote>
 <ol>
@@ -659,7 +659,7 @@
     <link href="http://yoursite.com/2017/02/24/Solr%E5%AD%A6%E4%B9%A0-Solr5-5-0%E6%90%AD%E5%BB%BA/"/>
     <id>http://yoursite.com/2017/02/24/Solr学习-Solr5-5-0搭建/</id>
     <published>2017-02-24T14:58:37.000Z</published>
-    <updated>2017-03-03T16:38:10.000Z</updated>
+    <updated>2019-10-09T15:10:10.111Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1></blockquote>
@@ -679,7 +679,7 @@
 <p>将env-entry-value值替换为/Users/fuukangun/solr_home/solr，保存。</p>
 </li>
 </ol>
-<p>启动Tomcat，在浏览器输入<a href="http://localhost:8080/solr/index.html#/" target="_blank" rel="external">http://localhost:8080/solr/index.html#/</a> 就能出现Solr控制台了。<br><img src="https://olwqv7o0u.qnssl.com/image/Solr-index.png" alt="Solr控制台"></p>
+<p>启动Tomcat，在浏览器输入<a href="http://localhost:8080/solr/index.html#/" target="_blank" rel="external">http://localhost:8080/solr/index.html#/</a> 就能出现Solr控制台了。<br><img src="http://pic.guanjun.fun/image/Solr-index.png" alt="Solr控制台"></p>
 ]]></content>
     
     <summary type="html">

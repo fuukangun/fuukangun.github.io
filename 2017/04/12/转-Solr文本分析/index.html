@@ -93,15 +93,15 @@
 <meta property="og:url" content="http://yoursite.com/2017/04/12/转-Solr文本分析/index.html">
 <meta property="og:site_name" content="fuukangun">
 <meta property="og:description" content="本文讲述的是搜索引擎的核心功能：文本分析。">
-<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/1.jpg">
-<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/2.jpg">
-<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/3.jpg">
-<meta property="og:image" content="https://olwqv7o0u.qnssl.com/image/4.jpg">
-<meta property="og:updated_time" content="2017-05-31T15:25:24.000Z">
+<meta property="og:image" content="http://pic.guanjun.fun/image/1.jpg">
+<meta property="og:image" content="http://pic.guanjun.fun/image/2.jpg">
+<meta property="og:image" content="http://pic.guanjun.fun/image/3.jpg">
+<meta property="og:image" content="http://pic.guanjun.fun/image/4.jpg">
+<meta property="og:updated_time" content="2019-10-09T15:08:22.328Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="转:Solr文本分析">
 <meta name="twitter:description" content="本文讲述的是搜索引擎的核心功能：文本分析。">
-<meta name="twitter:image" content="https://olwqv7o0u.qnssl.com/image/1.jpg">
+<meta name="twitter:image" content="http://pic.guanjun.fun/image/1.jpg">
 
 
 
@@ -410,8 +410,8 @@
 <p>Type属性可以指定为index或是query值，分别表示是索引时用的分析器，和查询时所用的分析器。如果在索引和查询时使用相同的分析器，你可以不指定type属性值。</p>
 <p>分析器的配置中可以选用一个或多个字符过滤器（character filter），字符过滤器是对原始文本进行字符流级别的操作。它通常可以用于大小写转化，去除字母上标等等。在字符过滤器之后是分词器（Tokenizer），它是必须要配置的。分析器会使用分词器将字符流切分成词元（Token）系列，通常用在空格处切分这种简单的算法。后面的步骤是可选的，比如token过滤器（Token Filter）会对token进行许多种操作，最后产生的词元会被称为词（Term），即用于Lucene实际索引和查询的单位。</p>
 <p>最后，我有必须对autoGeneratePhraseQueries布尔属性补充两句，这个属性只能用于文本域。如果在查询文本分析时产生了多个词元，比如Wi-Fi分词为Wi和Fi，那么默认情况下它们只是两个不同的搜索词，它们没有位置上的关系。但如果autoGeneratePhraseQueries被设置，那么这两个词元就构造了一个词组查询，即“WiFi”，所以索引中“WiFi”必须相邻才能被查询到。在新Solr版本中，默认它被设置为false。我不建议使用它。</p>
-<h1 id="在Admin上对字段进行分析"><a href="#在Admin上对字段进行分析" class="headerlink" title="在Admin上对字段进行分析"></a>在Admin上对字段进行分析</h1><p>在我们深入特定分析组件的细节之前，有必要去熟悉Solr的分析页面，它是一个很好的实验和查错工具，绝对不容错过。你将会用它来验证不同的分析配置，来找到你最想要的效果，你还可以用它来找到你认为应该会匹配的查询为什么没有匹配。在Solr的管理页面，你可以看到一个名为[Analysis]的链接，你进入后，会看到下面的界面。<br><img src="https://olwqv7o0u.qnssl.com/image/1.jpg" alt="pic1"><br>界面上的第一个选项是必选的，你可选择直接通过字段类型名称来选择类型，你也可以间接地通过一个字段的名字来选择自端类型。在上面的示例中，我选择了title字段</p>
-<p>通过Schema Browser可以看到这个字段类型是 text_general<br><img src="https://olwqv7o0u.qnssl.com/image/2.jpg" alt="pic2"><br>点击灰色的 text_general，可以看到这个字段的分析器中定义的分词器和过滤器<br><img src="https://olwqv7o0u.qnssl.com/image/3.jpg" alt="pic3"><br>接下来，你可以分析索引或是查询文本，也可以两者同时分析。你需要输入些文本到文本框中以进行分析。将字段值放到Index文本框中，将查询文本放入Query文本框中，点击Analyze按钮看到一下文本处理结果，因为还没有中文处理，所以中文都被一个字一个字的分开处理了。<br><img src="https://olwqv7o0u.qnssl.com/image/4.jpg" alt="pic4"></p>
+<h1 id="在Admin上对字段进行分析"><a href="#在Admin上对字段进行分析" class="headerlink" title="在Admin上对字段进行分析"></a>在Admin上对字段进行分析</h1><p>在我们深入特定分析组件的细节之前，有必要去熟悉Solr的分析页面，它是一个很好的实验和查错工具，绝对不容错过。你将会用它来验证不同的分析配置，来找到你最想要的效果，你还可以用它来找到你认为应该会匹配的查询为什么没有匹配。在Solr的管理页面，你可以看到一个名为[Analysis]的链接，你进入后，会看到下面的界面。<br><img src="http://pic.guanjun.fun/image/1.jpg" alt="pic1"><br>界面上的第一个选项是必选的，你可选择直接通过字段类型名称来选择类型，你也可以间接地通过一个字段的名字来选择自端类型。在上面的示例中，我选择了title字段</p>
+<p>通过Schema Browser可以看到这个字段类型是 text_general<br><img src="http://pic.guanjun.fun/image/2.jpg" alt="pic2"><br>点击灰色的 text_general，可以看到这个字段的分析器中定义的分词器和过滤器<br><img src="http://pic.guanjun.fun/image/3.jpg" alt="pic3"><br>接下来，你可以分析索引或是查询文本，也可以两者同时分析。你需要输入些文本到文本框中以进行分析。将字段值放到Index文本框中，将查询文本放入Query文本框中，点击Analyze按钮看到一下文本处理结果，因为还没有中文处理，所以中文都被一个字一个字的分开处理了。<br><img src="http://pic.guanjun.fun/image/4.jpg" alt="pic4"></p>
 <p>你可以选中verbose output来查看处理的详细信息，我希望你能自己试一下。</p>
 <p>上图中每一行表示分析器处理链上的每一步的处理结果。比如第三个分析组件是LowerCaseFilter，它的处理结果就在第三行。前面的ST/SF/LCF应该是分词器和过滤器的简称。</p>
 <p>下面我们接着来详细看看有哪些分词器和过滤器吧。</p>
@@ -768,8 +768,8 @@
       <div class="footer-inner">
         <div class="copyright" >
   
-  &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
